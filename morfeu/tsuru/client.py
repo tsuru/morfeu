@@ -83,7 +83,11 @@ class TsuruClient(object):
     def get_app(self, app_name=None):
         if app_name:
             url = TsuruClientUrls.get_app_url(app_name)
-            return self.__get(url=url)
+            try:
+                apps = self.__get(url=url)
+            except TsuruClientBadResponse, e:
+                LOG.error(e)
+                return {}
         else:
             return {}
 
