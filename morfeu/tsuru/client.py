@@ -84,7 +84,7 @@ class TsuruClient(object):
         if app_name:
             url = TsuruClientUrls.get_app_url(app_name)
             try:
-                apps = self.__get(url=url)
+                return self.__get(url=url)
             except TsuruClientBadResponse, e:
                 LOG.error(e)
                 return {}
@@ -95,7 +95,11 @@ class TsuruClient(object):
         LOG.info("Getting deploys for \"{}\"".format(app_name))
         if app_name:
             url = TsuruClientUrls.get_list_deploy_url_by_app(app_name)
-            return self.__get(url=url)
+            try:
+                return self.__get(url=url)
+            except TsuruClientBadResponse, e:
+                LOG.error(e)
+                return []
         else:
             return []
 
