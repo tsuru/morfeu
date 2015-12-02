@@ -120,5 +120,26 @@ class AppTestCase(unittest.TestCase):
         app = TsuruApp(name="myapp")
         self.assertFalse(app.should_go_to_bed())
 
+    @httpretty.activate
+    def test_stop_started_app(self):
+        url = TsuruClientUrls.get_stop_url_by_app_and_process_name("myapp", "web")
+        httpretty.register_uri(httpretty.POST, url, content_type="application/json", status=200)
+
+        self.mock_app("myapp")
+
+        app = TsuruApp(name="myapp")
+        app.started = True
+        app.stop()
+
+    @httpretty.activate
+    def test_stop_stopped_app(self):
+        url = TsuruClientUrls.get_stop_url_by_app_and_process_name("myapp", "web")
+        httpretty.register_uri(httpretty.POST, url, content_type="application/json", status=200)
+
+        self.mock_app("myapp")
+
+        app = TsuruApp(name="myapp")
+        app.stop()
+
 if __name__ == '__main__':
     unittest.main()
