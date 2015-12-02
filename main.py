@@ -48,8 +48,7 @@ if __name__ == "__main__":
 
                 tsuru_app = TsuruApp(name=app_name, dry=dry)
                 if tsuru_app.should_go_to_bed():
-                    if tsuru_app.pool in POOL_WHITELIST:
-                        apps_to_sleep.append(tsuru_app)
+                    apps_to_sleep.append(tsuru_app)
 
             LOG.info("{0} apps to sleep: {1}".format(len(apps_to_sleep), [app.name for app in apps_to_sleep]))
 
