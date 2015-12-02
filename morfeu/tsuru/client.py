@@ -61,7 +61,7 @@ class TsuruClient(object):
 
         try:
             apps = self.__get(url=url)
-        except TsuruClientBadResponse, e:
+        except (TsuruClientBadResponse, requests.exceptions.Timeout) as e:
             LOG.error(e)
             return app_list
 
@@ -88,7 +88,7 @@ class TsuruClient(object):
             url = TsuruClientUrls.get_app_url(app_name)
             try:
                 return self.__get(url=url)
-            except TsuruClientBadResponse, e:
+            except (TsuruClientBadResponse, requests.exceptions.Timeout) as e:
                 LOG.error(e)
                 return {}
         else:
@@ -100,7 +100,7 @@ class TsuruClient(object):
             url = TsuruClientUrls.get_list_deploy_url_by_app(app_name)
             try:
                 return self.__get(url=url)
-            except TsuruClientBadResponse, e:
+            except (TsuruClientBadResponse, requests.exceptions.Timeout) as e:
                 LOG.error(e)
                 return []
         else:
@@ -115,6 +115,6 @@ class TsuruClient(object):
             req = self.__post(url=url, is_json=False)
             LOG.info("App {0} stopped... {1}".format(app_name, req.content))
             return True
-        except TsuruClientBadResponse, e:
+        except (TsuruClientBadResponse, requests.exceptions.Timeout) as e:
             LOG.error(e)
             return False

@@ -1,6 +1,7 @@
 import json
 import unittest
 import httpretty
+import requests
 from morfeu.tsuru.client import TsuruClient, TsuruClientUrls
 
 
@@ -12,10 +13,14 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     def tearDown(self):
         self.tsuru_client = None
 
+    def raiseTimeout(request, uri, headers):
+        raise requests.Timeout('Connection timed out.')
+
     # ## LIST APPS ## #
 
     @httpretty.activate
     def test_list_apps_with_success(self):
+
         expected_response = json.dumps([{
             "ip": "10.10.10.10",
             "name": "app1",
@@ -55,6 +60,19 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                status=500)
         self.assertEqual(self.tsuru_client.list_apps(), [])
 
+    @httpretty.activate
+    def test_list_apps_with_timeout(self):
+
+        def raiseTimeout(request, uri, headers):
+            raise requests.Timeout('Connection timed out.')
+
+        httpretty.register_uri(method=httpretty.GET,
+                               uri=TsuruClientUrls.list_apps_url(),
+                               body=raiseTimeout,
+                               content_type="application/json",
+                               status=500)
+        self.assertEqual(self.tsuru_client.list_apps(), [])
+
     # ## END LIST APPS ## #
 
     # ## GET APP ## #
@@ -87,6 +105,19 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                status=500)
         self.assertEqual(self.tsuru_client.get_app(app_name=app_name), json.loads("{}"))
 
+    @httpretty.activate
+    def test_get_app_with_timeout(self):
+
+        def raiseTimeout(request, uri, headers):
+            raise requests.Timeout('Connection timed out.')
+
+        app_name = 'morfeu'
+        httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_app_url(app_name),
+                               body=raiseTimeout,
+                               content_type="application/json",
+                               status=500)
+        self.assertEqual(self.tsuru_client.get_app(app_name=app_name), json.loads("{}"))
+
     # ## END GET APP ## #
 
     # ## BEGIN LIST DEPLOYS ## #
@@ -113,6 +144,20 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                content_type="application/json",
                                status=500)
         self.assertEqual(self.tsuru_client.list_deploys(app_name=app_name), json.loads("[]"))
+
+    @httpretty.activate
+    def test_list_deploys_with_timeout(self):
+
+        def raiseTimeout(request, uri, headers):
+            raise requests.Timeout('Connection timed out.')
+
+        app_name = 'morfeu'
+        httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_list_deploy_url_by_app(app_name),
+                               body=raiseTimeout,
+                               content_type="application/json",
+                               status=500)
+        self.assertEqual(self.tsuru_client.list_deploys(app_name=app_name), json.loads("[]"))
+
     # ## END LIST DEPLOYS ## #
 
     # ## BEGIN SLEEP APP ## #
@@ -138,6 +183,22 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name,
                                                                                     process_name),
                                body=expected_response,
+                               content_type="application/json",
+                               status=500)
+        self.assertFalse(self.tsuru_client.sleep_app(app_name=app_name, process_name="web"))
+
+    @httpretty.activate
+    def test_sleep_app_with_timeout(self):
+
+        def raiseTimeout(request, uri, headers):
+            raise requests.Timeout('Connection timed out.')
+
+        app_name = 'morfeu'
+        process_name = "web"
+        httpretty.register_uri(httpretty.POST,
+                               TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name,
+                                                                                    process_name),
+                               body=raiseTimeout,
                                content_type="application/json",
                                status=500)
         self.assertFalse(self.tsuru_client.sleep_app(app_name=app_name, process_name="web"))
