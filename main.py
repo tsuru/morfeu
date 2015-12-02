@@ -7,7 +7,7 @@ from ConfigParser import SafeConfigParser
 
 from morfeu.tsuru.app import TsuruApp
 from morfeu.tsuru.client import TsuruClient
-from morfeu.settings import TSURU_APP_PROXY, POOL_WHITELIST, SLEEP_TIME
+from morfeu.settings import TSURU_APP_PROXY, SLEEP_TIME
 
 logging.basicConfig(format='%(asctime)s %(levelname)s %(module)s %(message)s',
                     level=logging.DEBUG,

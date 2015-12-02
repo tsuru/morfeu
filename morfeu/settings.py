@@ -11,5 +11,5 @@ TSURU_TOKEN = os.getenv("TSURU_TOKEN", "token")
 TSURU_HOST = os.getenv("TSURU_HOST", "http://localhost")
 TSURU_APP_PROXY = os.getenv("TSURU_APP_PROXY", "")
 
-POOL_WHITELIST = os.getenv("POOL_WHITELIST", "").split(',')
+POOL_WHITELIST = os.getenv("POOL_WHITELIST", "")
 SLEEP_TIME = int(os.getenv("MORFEU_SLEEP_TIME", "60"))

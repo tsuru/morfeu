@@ -1,7 +1,7 @@
 import requests
 import logging
 from .exceptions import TsuruClientBadResponse
-from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST
+from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST
 
 LOG = logging.getLogger(__name__)
 
@@ -53,7 +53,7 @@ class TsuruClient(object):
         :returns [{"units": [{"ProcessName" : "web"}]}]
         """
         LOG.info("Getting apps of type \"{}\" and domain \"{}\"".format(type, domain))
-        url = TsuruClientUrls.list_apps_url(pool=os.environ.get("POOL_WHITELIST", ""))
+        url = TsuruClientUrls.list_apps_url(pool=POOL_WHITELIST)
         app_list = []
 
         try:
