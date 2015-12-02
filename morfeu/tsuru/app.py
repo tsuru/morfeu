@@ -108,7 +108,7 @@ class TsuruApp(object):
             # trim
             redis_client.ltrim(key, 0, 0)
 
-            #update route
+            # update route
             for host in tsuru_app_proxy.hosts:
                 redis_client.rpush(key, "http://{0}".format(host))
 

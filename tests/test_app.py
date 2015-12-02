@@ -41,7 +41,7 @@ class AppTestCase(unittest.TestCase):
 
         redis_mock.assert_called_with(socket_timeout=30, host='localhost', port=6379)
         redis_conn_mock.ltrim.assert_called_with('frontend:myapp.tsuru.io', 0, 0)
-        redis_conn_mock.rpush.assert_called_with('frontend:myapp.tsuru.io', 'http://caffeine.tsuru.io')
+        redis_conn_mock.rpush.assert_called_with('frontend:myapp.tsuru.io', 'http://10.10.10.10')
         redis_conn_mock.close.assert_called_with()
 
     def mock_deploy(self, app, date="2015-01-01T15:40:04.931-02:00"):
