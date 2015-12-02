@@ -69,8 +69,6 @@ class TsuruClient(object):
             for unit in units:
                 if unit.get("ProcessName", "") == "web":
                     units_list.append(unit["ID"])
-                else:
-                    pass
 
             if units_list:
                 app_list.append({app["name"]: units_list})
