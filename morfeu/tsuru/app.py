@@ -59,7 +59,7 @@ class TsuruApp(object):
     def stop(self):
         if not self.dry:
             if self.started:
-                tsuru_client.stop_app(app_name=self.name)
+                tsuru_client.sleep_app(app_name=self.name)
             else:
                 LOG.info("App {} is already stopped".format(self.name))
         else:
