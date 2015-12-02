@@ -24,9 +24,15 @@ class TsuruClient(object):
         else:
             return r
 
+    def list_apps_url(self):
+        return "{0}/apps".format(TSURU_HOST)
+
     def list_apps(self, type=None, domain=None):
+        """
+        :returns [{"units": [{"ProcessName" : "web"}]}]
+        """
         LOG.info("Getting apps of type \"{}\" and domain \"{}\"".format(type, domain))
-        url = "{0}/apps".format(TSURU_HOST)
+        url = self.list_apps_url()
         app_list = []
         apps = self.__get(url=url)
         for app in apps:

@@ -1,0 +1,2 @@
+HTTPretty==0.8.3
+mock==1.0.1
