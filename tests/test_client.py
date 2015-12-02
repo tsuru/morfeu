@@ -97,13 +97,8 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                status=500)
         self.assertEqual(self.tsuru_client.list_apps(), [])
 
-    # ## END LIST APPS ## #
-
-    # ## GET APP ## #
-
     @httpretty.activate
     def test_get_app_with_success(self):
-
         app_name = 'morfeu'
         expected_response = json.dumps([{
             u'ip': u'morfeu.cloud.io',
@@ -117,7 +112,6 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_get_app_with_failure(self):
-
         app_name = 'morfeu'
         expected_response = json.dumps([{
             u'ip': u'morfeu.cloud.io',
@@ -131,7 +125,6 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_get_app_with_timeout(self):
-
         def raiseTimeout(request, uri, headers):
             raise requests.Timeout('Connection timed out.')
 
@@ -142,9 +135,10 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                status=500)
         self.assertEqual(self.tsuru_client.get_app(app_name=app_name), json.loads("{}"))
 
-    # ## END GET APP ## #
+    @httpretty.activate
+    def test_get_app_without_app_name(self):
+        self.assertEqual(self.tsuru_client.get_app(), json.loads("{}"))
 
-    # ## BEGIN LIST DEPLOYS ## #
     @httpretty.activate
     def test_list_deploys_with_success(self):
         app_name = 'morfeu'
@@ -182,9 +176,6 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                status=500)
         self.assertEqual(self.tsuru_client.list_deploys(app_name=app_name), json.loads("[]"))
 
-    # ## END LIST DEPLOYS ## #
-
-    # ## BEGIN SLEEP APP ## #
     @httpretty.activate
     def test_sleep_app_with_success(self):
         app_name = 'morfeu'
@@ -226,8 +217,6 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                content_type="application/json",
                                status=500)
         self.assertFalse(self.tsuru_client.sleep_app(app_name=app_name, process_name="web"))
-
-    # ## END SLEEP APP ## #
 
 if __name__ == '__main__':
     unittest.main()
