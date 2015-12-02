@@ -108,14 +108,15 @@ class TsuruApp(object):
             # trim
             redis_client.ltrim(key, 0, 0)
 
-            # update route
-            redis_client.rpush(key, "http://{0}".format(tsuru_app_proxy.ip))
+            #update route
+            for host in tsuru_app_proxy.hosts:
+                redis_client.rpush(key, "http://{0}".format(host))
 
             try:
                 redis_client.close()
             except:
                 pass
 
-            LOG.info("App {0} re-routed to {1}".format(self.name, tsuru_app_proxy.ip))
+            LOG.info("App {0} re-routed to {1}".format(self.name, tsuru_app_proxy.hosts))
         else:
-            LOG.info("App {0} re-routed (fake) to {1}".format(self.name, tsuru_app_proxy.ip))
+            LOG.info("App {0} re-routed (fake) to {1}".format(self.name, tsuru_app_proxy.hosts))
