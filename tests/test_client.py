@@ -207,6 +207,10 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         self.assertFalse(self.tsuru_client.sleep_app(app_name=app_name, process_name="web"))
 
     @httpretty.activate
+    def test_sleep_app_without_app_name(self):
+        self.assertFalse(self.tsuru_client.sleep_app())
+
+    @httpretty.activate
     def test_sleep_app_with_timeout(self):
 
         def raiseTimeout(request, uri, headers):

@@ -100,7 +100,7 @@ class TsuruClient(object):
 
     def sleep_app(self, app_name=None, process_name="web"):
         if not app_name:
-            return
+            return False
         url = TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name,
                                                                    process_name=process_name)
         try:
