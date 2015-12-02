@@ -118,11 +118,28 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     # ## BEGIN SLEEP APP ## #
     @httpretty.activate
     def test_sleep_app_with_success(self):
-        self.assertTrue(False)
+        app_name = 'morfeu'
+        process_name = "web"
+        expected_response = json.dumps("")
+        httpretty.register_uri(httpretty.POST, TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name,
+                                                                                                    process_name=process_name),
+                               body=expected_response,
+                               content_type="application/json",
+                               status=200)
+        self.assertTrue(self.tsuru_client.sleep_app(app_name=app_name, process_name="web"))
 
     @httpretty.activate
     def test_sleep_app_with_failure(self):
-        self.assertTrue(False)
+        app_name = 'morfeu'
+        process_name = "web"
+        expected_response = json.dumps("")
+        httpretty.register_uri(httpretty.POST, TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name,
+                                                                                                    process_name=process_name),
+                               body=expected_response,
+                               content_type="application/json",
+                               status=500)
+        self.assertFalse(self.tsuru_client.sleep_app(app_name=app_name, process_name="web"))
+
     # ## END SLEEP APP ## #
 
 if __name__ == '__main__':
