@@ -20,6 +20,7 @@ LOG = logging.getLogger(__name__)
 
 tsuru_client = TsuruClient(timeout=TIMEOUT)
 
+
 class TsuruApp(object):
 
     def __init__(self, name=None, dry=False, timeout=10):
@@ -66,16 +67,16 @@ class TsuruApp(object):
 
     def should_go_to_bed(self, time_range=TIME_RANGE_IN_HOURS):
         payload = {
-          "query": {
-            "filtered": {
-              "filter": {
-                "and": [
-                   { "range": { "@timestamp": { "gt": "now-{}h".format(time_range) } } },
-                   { "term": { "app.raw": self.name }  }
-                ]
-              }
+            "query": {
+                "filtered": {
+                    "filter": {
+                        "and": [
+                            {"range": {"@timestamp": {"gt": "now-{}h".format(time_range)}}},
+                            {"term": {"app.raw": self.name}}
+                        ]
+                    }
+                }
             }
-          }
         }
 
         url = "http://{0}/.measure-tsuru-*/response_time/_search".format(ESEARCH_HOST)
@@ -106,14 +107,15 @@ class TsuruApp(object):
     def re_route(self, tsuru_app_proxy=None):
 
         if not self.dry:
-            redis_client = redis.StrictRedis(host=HIPACHE_REDIS_HOST, port=HIPACHE_REDIS_PORT, socket_timeout=self.timeout)
+            redis_client = redis.StrictRedis(
+                host=HIPACHE_REDIS_HOST, port=HIPACHE_REDIS_PORT, socket_timeout=self.timeout)
 
             key = "frontend:{0}".format(self.ip)
 
-            #trim
+            # trim
             redis_client.ltrim(key, 0, 0)
 
-            #update route
+            # update route
             redis_client.rpush(key, "http://{0}".format(tsuru_app_proxy.ip))
 
             try:
