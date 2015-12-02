@@ -1,4 +1,5 @@
 import json
+import os
 import unittest
 import httpretty
 import requests
@@ -28,6 +29,20 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         }])
 
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.list_apps_url(),
+                               body=expected_response, content_type="application/json", status=200)
+
+        self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
+
+    @httpretty.activate
+    def test_list_apps_by_pool(self):
+        os.environ["POOL_WHITELIST"] = "green"
+        expected_response = json.dumps([{
+            "ip": "10.10.10.10",
+            "name": "app1",
+            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": "web"}]
+        }])
+
+        httpretty.register_uri(httpretty.GET, TsuruClientUrls.list_apps_url(pool="green"),
                                body=expected_response, content_type="application/json", status=200)
 
         self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
