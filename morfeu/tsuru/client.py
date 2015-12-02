@@ -118,5 +118,3 @@ class TsuruClient(object):
         except TsuruClientBadResponse, e:
             LOG.error(e)
             return False
-
-

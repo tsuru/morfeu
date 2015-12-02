@@ -94,7 +94,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     def test_list_deploys_with_success(self):
         app_name = 'morfeu'
         expected_response = json.dumps([{
-            "App":"morfeu"
+            "App": "morfeu"
         }])
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_list_deploy_url_by_app(app_name),
                                body=expected_response,
@@ -106,7 +106,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     def test_list_deploys_with_failure(self):
         app_name = 'morfeu'
         expected_response = json.dumps([{
-            "App":"morfeu"
+            "App": "morfeu"
         }])
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_list_deploy_url_by_app(app_name),
                                body=expected_response,
@@ -121,8 +121,9 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         app_name = 'morfeu'
         process_name = "web"
         expected_response = json.dumps("")
-        httpretty.register_uri(httpretty.POST, TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name,
-                                                                                                    process_name=process_name),
+        httpretty.register_uri(httpretty.POST,
+                               TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name,
+                                                                                    process_name),
                                body=expected_response,
                                content_type="application/json",
                                status=200)
@@ -133,8 +134,9 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         app_name = 'morfeu'
         process_name = "web"
         expected_response = json.dumps("")
-        httpretty.register_uri(httpretty.POST, TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name,
-                                                                                                    process_name=process_name),
+        httpretty.register_uri(httpretty.POST,
+                               TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name,
+                                                                                    process_name),
                                body=expected_response,
                                content_type="application/json",
                                status=500)
