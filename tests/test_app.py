@@ -100,6 +100,13 @@ class AppTestCase(unittest.TestCase):
         app = TsuruApp(name="myapp")
         self.assertFalse(app.should_go_to_bed())
 
+    @httpretty.activate
+    def test_unicode(self):
+        self.mock_app("myapp")
+
+        app = TsuruApp(name="myapp")
+        self.assertEqual(unicode(app), "myapp")
+
 
 if __name__ == '__main__':
     unittest.main()
