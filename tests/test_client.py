@@ -60,7 +60,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     # ## GET APP ## #
 
     @httpretty.activate
-    def test_get_app_successfully(self):
+    def test_get_app_with_success(self):
 
         app_name = 'morfeu'
         expected_response = json.dumps([{
@@ -89,16 +89,31 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
 
     # ## END GET APP ## #
 
-    # ## BEGIN LIST DEPLOY ## #
+    # ## BEGIN LIST DEPLOYS ## #
     @httpretty.activate
-    def test_list_deploy_with_success(self):
-        self.assertTrue(False)
+    def test_list_deploys_with_success(self):
+        app_name = 'morfeu'
+        expected_response = json.dumps([{
+            "App":"morfeu"
+        }])
+        httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_list_deploy_url_by_app(app_name),
+                               body=expected_response,
+                               content_type="application/json",
+                               status=200)
+        self.assertEqual(self.tsuru_client.list_deploys(app_name=app_name), json.loads(expected_response))
 
     @httpretty.activate
-    def test_list_deploy_with_failure(self):
-        self.assertTrue(False)
-    # ## END LIST DEPLOY ## #
-
+    def test_list_deploys_with_failure(self):
+        app_name = 'morfeu'
+        expected_response = json.dumps([{
+            "App":"morfeu"
+        }])
+        httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_list_deploy_url_by_app(app_name),
+                               body=expected_response,
+                               content_type="application/json",
+                               status=500)
+        self.assertEqual(self.tsuru_client.list_deploys(app_name=app_name), json.loads("[]"))
+    # ## END LIST DEPLOYS ## #
 
     # ## BEGIN SLEEP APP ## #
     @httpretty.activate
