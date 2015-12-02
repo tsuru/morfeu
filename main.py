@@ -1,5 +1,4 @@
 import time
-import os
 import logging
 import sys
 
@@ -8,6 +7,7 @@ from ConfigParser import SafeConfigParser
 
 from morfeu.tsuru.app import TsuruApp
 from morfeu.tsuru.client import TsuruClient
+from morfeu.settings import TSURU_APP_PROXY, POOL_WHITELIST, SLEEP_TIME
 
 logging.basicConfig(format='%(asctime)s %(levelname)s %(module)s %(message)s',
                     level=logging.DEBUG,
@@ -16,11 +16,6 @@ logging.basicConfig(format='%(asctime)s %(levelname)s %(module)s %(message)s',
 logging.getLogger("requests").setLevel(logging.WARNING)
 
 LOG = logging.getLogger(__name__)
-
-POOL_WHITELIST = os.getenv("POOL_WHITELIST", "").split(',')
-TSURU_APP_PROXY = os.getenv("TSURU_APP_PROXY", "")
-SLEEP_TIME = int(os.getenv("MORFEU_SLEEP_TIME", "60"))
-TIMEOUT = int(os.getenv("MORFEU_TIMEOUT", "30"))
 
 if __name__ == "__main__":
 
@@ -37,21 +32,21 @@ if __name__ == "__main__":
     dry = args.dry
     daemon = args.daemon
 
-    tsuru_client = TsuruClient(timeout=TIMEOUT)
+    tsuru_client = TsuruClient()
 
     while True:
 
         try:
             LOG.info("Running morfeu...")
 
-            proxy_app = TsuruApp(name=TSURU_APP_PROXY, timeout=TIMEOUT)
+            proxy_app = TsuruApp(name=TSURU_APP_PROXY)
             apps_to_sleep = []
             apps = tsuru_client.list_apps(type="web", domain="")
 
             for app in apps:
                 app_name = app.keys()[0]
 
-                tsuru_app = TsuruApp(name=app_name, dry=dry, timeout=TIMEOUT)
+                tsuru_app = TsuruApp(name=app_name, dry=dry)
                 if tsuru_app.should_go_to_bed():
                     if tsuru_app.pool in POOL_WHITELIST:
                         apps_to_sleep.append(tsuru_app)

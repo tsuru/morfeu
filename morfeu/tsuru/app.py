@@ -1,5 +1,4 @@
 import requests
-import os
 import logging
 import redis
 import dateutil.parser
@@ -7,26 +6,20 @@ import datetime
 import pytz
 
 from morfeu.tsuru.client import TsuruClient
-
-HIPACHE_REDIS_HOST = os.getenv("HIPACHE_REDIS_HOST", "localhost")
-HIPACHE_REDIS_PORT = int(os.getenv("HIPACHE_REDIS_PORT", "6379"))
-
-ESEARCH_HOST = os.getenv("MORFEU_ESEARCH_HOST", "localhost")
-TIMEOUT = int(os.getenv("MORFEU_TIMEOUT", "30"))
-TIME_RANGE_IN_HOURS = os.getenv("TIME_RANGE_IN_HOURS", "1")
+from morfeu.settings import TIME_RANGE_IN_HOURS, ESEARCH_HOST, HIPACHE_REDIS_HOST, HIPACHE_REDIS_PORT, TIMEOUT
 
 LOG = logging.getLogger(__name__)
 
-tsuru_client = TsuruClient(timeout=TIMEOUT)
+tsuru_client = TsuruClient()
 
 
 class TsuruApp(object):
 
-    def __init__(self, name=None, dry=False, timeout=10):
+    def __init__(self, name=None, dry=False):
         self.units = []
         self.dry = dry
         self.name = name
-        self.timeout = timeout
+        self.timeout = TIMEOUT
         self.started = True
         self.ip = None
         self.pool = None

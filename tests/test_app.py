@@ -39,7 +39,7 @@ class AppTestCase(unittest.TestCase):
         app = TsuruApp(name=app_name)
         app.re_route(tsuru_app_proxy=proxy_app)
 
-        redis_mock.assert_called_with(socket_timeout=10, host='localhost', port=6379)
+        redis_mock.assert_called_with(socket_timeout=30, host='localhost', port=6379)
         redis_conn_mock.ltrim.assert_called_with('frontend:myapp.tsuru.io', 0, 0)
         redis_conn_mock.rpush.assert_called_with('frontend:myapp.tsuru.io', 'http://caffeine.tsuru.io')
         redis_conn_mock.close.assert_called_with()

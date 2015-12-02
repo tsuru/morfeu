@@ -1,12 +1,9 @@
 import requests
-import os
 import logging
 from .exceptions import TsuruClientBadResponse
+from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST
 
 LOG = logging.getLogger(__name__)
-
-TSURU_TOKEN = os.getenv("TSURU_TOKEN", "token")
-TSURU_HOST = os.getenv("TSURU_HOST", "http://localhost")
 
 
 class TsuruClientUrls(object):
@@ -30,8 +27,8 @@ class TsuruClientUrls(object):
 
 class TsuruClient(object):
 
-    def __init__(self, timeout=10):
-        self.timeout = timeout
+    def __init__(self):
+        self.timeout = TIMEOUT
         self.headers = {'Authorization': "bearer {0}".format(TSURU_TOKEN)}
 
     def __get(self, url=None, params={}):
