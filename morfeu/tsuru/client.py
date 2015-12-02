@@ -25,6 +25,7 @@ class TsuruClientUrls(object):
     def get_stop_url_by_app_and_process_name(cls, app_name=None, process_name=None):
         return "{0}/apps/{1}/stop?process={2}".format(TSURU_HOST, app_name, process_name)
 
+
 class TsuruClient(object):
 
     def __init__(self, timeout=10):
@@ -52,7 +53,7 @@ class TsuruClient(object):
         apps = self.__get(url=url)
         for app in apps:
             if domain:
-                if not domain in app.get("ip", ""):
+                if domain not in app.get("ip", ""):
                     continue
 
             units = app.get('units', [])
@@ -64,7 +65,7 @@ class TsuruClient(object):
                     pass
 
             if units_list:
-                app_list.append({app["name"] : units_list })
+                app_list.append({app["name"]: units_list})
 
         return app_list
 
