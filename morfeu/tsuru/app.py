@@ -94,8 +94,8 @@ class TsuruApp(object):
                     return False
                 else:
                     return True
-            else:
-                return True
+
+            return False
 
     def re_route(self, tsuru_app_proxy=None):
 
