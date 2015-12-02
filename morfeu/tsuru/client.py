@@ -7,6 +7,24 @@ LOG = logging.getLogger(__name__)
 TSURU_TOKEN = os.getenv("TSURU_TOKEN", "token")
 TSURU_HOST = os.getenv("TSURU_HOST", "http://localhost")
 
+class TsuruClientUrls(object):
+
+    @classmethod
+    def list_apps_url(cls):
+        return "{0}/apps".format(TSURU_HOST)
+
+    @classmethod
+    def get_app_url(cls, app_name):
+        return "{0}/apps/{1}".format(TSURU_HOST, app_name)
+
+    @classmethod
+    def get_list_deploy_url_by_app(cls, app_name):
+        return "{0}/deploys?app={1}".format(TSURU_HOST, app_name)
+
+    @classmethod
+    def get_stop_url_by_app_and_process_name(cls, app_name=None, process_name=None):
+        return "{0}/apps/{1}/stop?process={2}".format(TSURU_HOST, app_name, process_name)
+
 class TsuruClient(object):
 
     def __init__(self, timeout=10):
@@ -24,15 +42,12 @@ class TsuruClient(object):
         else:
             return r
 
-    def list_apps_url(self):
-        return "{0}/apps".format(TSURU_HOST)
-
     def list_apps(self, type=None, domain=None):
         """
         :returns [{"units": [{"ProcessName" : "web"}]}]
         """
         LOG.info("Getting apps of type \"{}\" and domain \"{}\"".format(type, domain))
-        url = self.list_apps_url()
+        url = TsuruClientUrls.list_apps_url()
         app_list = []
         apps = self.__get(url=url)
         for app in apps:
@@ -55,7 +70,7 @@ class TsuruClient(object):
 
     def get_app(self, app_name=None):
         if app_name:
-            url = "{0}/apps/{1}".format(TSURU_HOST, app_name)
+            url = TsuruClientUrls.get_app_url(app_name)
             return self.__get(url=url)
         else:
             return {}
@@ -63,7 +78,7 @@ class TsuruClient(object):
     def list_deploys(self, app_name=None):
         LOG.info("Getting deploys for \"{}\"".format(app_name))
         if app_name:
-            url = "{0}/deploys?app={1}".format(TSURU_HOST, app_name)
+            url = TsuruClientUrls.get_list_deploy_url_by_app(app_name)
             return self.__get(url=url)
         else:
             return []
@@ -71,7 +86,7 @@ class TsuruClient(object):
     def stop_app(self, app_name=None, process_name="web"):
         if not app_name:
             return
-        url = "{0}/apps/{1}/stop?process={2}".format(TSURU_HOST, app_name, process_name)
+        url = TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name, process_name=process_name)
         req = self.__post(url=url, is_json=False)
         if req.status_code == 200:
             LOG.info("App {0} stopped... {1}".format(app_name, req.content))
