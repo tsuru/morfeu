@@ -1,1 +1,1 @@
-worker: python main.py --daemon
+worker: python main.py --daemon --dry
