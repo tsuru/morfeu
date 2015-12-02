@@ -164,6 +164,10 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         self.assertEqual(self.tsuru_client.list_deploys(app_name=app_name), json.loads("[]"))
 
     @httpretty.activate
+    def test_list_deploys_without_app_name(self):
+        self.assertEqual(self.tsuru_client.list_deploys(), json.loads("[]"))
+
+    @httpretty.activate
     def test_list_deploys_with_timeout(self):
 
         def raiseTimeout(request, uri, headers):
