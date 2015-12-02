@@ -38,15 +38,12 @@ class TsuruClient(object):
         else:
             raise TsuruClientBadResponse("Bad Request {}".format(r.status_code))
 
-    def __post(self, url=None, payload={}, is_json=True):
+    def __post(self, url=None, payload={}):
         r = requests.post(url, data=payload, headers=self.headers, timeout=self.timeout)
         if r.status_code != requests.codes.ok:
             raise TsuruClientBadResponse("Bad Request {}".format(r.status_code))
 
-        if is_json:
-            return r.json()
-        else:
-            return r
+        return r
 
     def list_apps(self, type=None, domain=None):
         """
@@ -109,7 +106,7 @@ class TsuruClient(object):
         url = TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name,
                                                                    process_name=process_name)
         try:
-            req = self.__post(url=url, is_json=False)
+            req = self.__post(url=url)
             LOG.info("App {0} stopped... {1}".format(app_name, req.content))
             return True
         except (TsuruClientBadResponse, requests.exceptions.Timeout) as e:
