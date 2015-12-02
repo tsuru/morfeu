@@ -64,29 +64,51 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
 
         app_name = 'morfeu'
         expected_response = json.dumps([{
-            u'ip': u'morfeu.cloud.globoi.com',
+            u'ip': u'morfeu.cloud.io',
             u'name': u'morfeu',
         }])
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_app_url(app_name),
                                body=expected_response,
                                content_type="application/json",
                                status=200)
-        self.assertEqual(self.tsuru_client.get_app(app_name), json.loads(expected_response))
+        self.assertEqual(self.tsuru_client.get_app(app_name=app_name), json.loads(expected_response))
 
     @httpretty.activate
     def test_get_app_with_failure(self):
 
         app_name = 'morfeu'
         expected_response = json.dumps([{
-            u'ip': u'morfeu.cloud.globoi.com',
+            u'ip': u'morfeu.cloud.io',
             u'name': u'morfeu',
         }])
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_app_url(app_name),
                                body=expected_response,
                                content_type="application/json",
                                status=500)
-        self.assertEqual(self.tsuru_client.get_app(app_name), json.loads("{}"))
+        self.assertEqual(self.tsuru_client.get_app(app_name=app_name), json.loads("{}"))
 
     # ## END GET APP ## #
+
+    # ## BEGIN LIST DEPLOY ## #
+    @httpretty.activate
+    def test_list_deploy_with_success(self):
+        self.assertTrue(False)
+
+    @httpretty.activate
+    def test_list_deploy_with_failure(self):
+        self.assertTrue(False)
+    # ## END LIST DEPLOY ## #
+
+
+    # ## BEGIN SLEEP APP ## #
+    @httpretty.activate
+    def test_sleep_app_with_success(self):
+        self.assertTrue(False)
+
+    @httpretty.activate
+    def test_sleep_app_with_failure(self):
+        self.assertTrue(False)
+    # ## END SLEEP APP ## #
+
 if __name__ == '__main__':
     unittest.main()
