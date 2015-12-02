@@ -1,5 +1,9 @@
+clean:
+	@find . -name "*.pyc" -delete
+
 deps:
 	@pip install -r requirements_test.txt
 
-test: deps
-	@python -m unittest discover
+test: clean deps
+	@coverage run -m unittest discover
+	@coverage report --omit="*/tests/*" --include="./*" -m
