@@ -3,7 +3,6 @@ import os
 import logging
 import redis
 import dateutil.parser
-import dateutil.relativedelta
 import datetime
 import pytz
 
@@ -94,9 +93,10 @@ class TsuruApp(object):
             if first_deploy:
                 timestamp = dateutil.parser.parse(first_deploy.get("Timestamp", ""))
                 today = datetime.datetime.now(pytz.utc)
-                delta = dateutil.relativedelta.relativedelta(today, timestamp)
+                delta = today - timestamp
+                delta_hours = delta.total_seconds() / 60 / 60
 
-                if delta.hours <= int(time_range):
+                if delta_hours <= int(time_range):
                     LOG.info("Ignoring \"{}\", created at \"{}\"".format(self.name, timestamp))
                     return False
                 else:
