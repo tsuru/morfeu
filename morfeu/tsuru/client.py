@@ -1,11 +1,13 @@
 import requests
 import os
 import logging
+from .exceptions import TsuruClientBadResponse
 
 LOG = logging.getLogger(__name__)
 
 TSURU_TOKEN = os.getenv("TSURU_TOKEN", "token")
 TSURU_HOST = os.getenv("TSURU_HOST", "http://localhost")
+
 
 class TsuruClientUrls(object):
 
@@ -34,7 +36,10 @@ class TsuruClient(object):
 
     def __get(self, url=None, params={}):
         r = requests.get(url, params=params, headers=self.headers, timeout=self.timeout)
-        return r.json()
+        if r.status_code == requests.codes.ok:
+            return r.json()
+        else:
+            raise TsuruClientBadResponse("Bad Request {}".format(r.status_code))
 
     def __post(self, url=None, payload={}, is_json=True):
         r = requests.post(url, data=payload, headers=self.headers, timeout=self.timeout)
@@ -50,7 +55,13 @@ class TsuruClient(object):
         LOG.info("Getting apps of type \"{}\" and domain \"{}\"".format(type, domain))
         url = TsuruClientUrls.list_apps_url()
         app_list = []
-        apps = self.__get(url=url)
+
+        try:
+            apps = self.__get(url=url)
+        except TsuruClientBadResponse, e:
+            LOG.error(e)
+            return app_list
+
         for app in apps:
             if domain:
                 if domain not in app.get("ip", ""):
@@ -87,7 +98,8 @@ class TsuruClient(object):
     def stop_app(self, app_name=None, process_name="web"):
         if not app_name:
             return
-        url = TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name, process_name=process_name)
+        url = TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name,
+                                                                   process_name=process_name)
         req = self.__post(url=url, is_json=False)
         if req.status_code == 200:
             LOG.info("App {0} stopped... {1}".format(app_name, req.content))

@@ -12,7 +12,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     def tearDown(self):
         self.tsuru_client = None
 
-    ### LIST APPS ###
+    # ## LIST APPS ## #
 
     @httpretty.activate
     def test_client_list_apps_with_success(self):
@@ -44,7 +44,6 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_client_list_with_failure(self):
 
-
         expected_response = json.dumps([{
             "ip": "10.10.10.10",
             "name": "app1",
@@ -56,7 +55,6 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                status=500)
         self.assertEqual(self.tsuru_client.list_apps(), [])
 
-
-    ### END LIST APPS ###
+    # ## END LIST APPS ## #
 if __name__ == '__main__':
     unittest.main()

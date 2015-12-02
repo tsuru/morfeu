@@ -1,0 +1,2 @@
+class TsuruClientBadResponse(Exception):
+    pass
