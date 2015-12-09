@@ -13,3 +13,5 @@ TSURU_APP_PROXY = os.getenv("TSURU_APP_PROXY", "")
 
 POOL_WHITELIST = os.getenv("POOL_WHITELIST", "")
 SLEEP_TIME = int(os.getenv("MORFEU_SLEEP_TIME", "60"))
+
+DOMAIN = os.getenv("DOMAIN")
