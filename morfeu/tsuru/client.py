@@ -67,7 +67,7 @@ class TsuruClient(object):
             units = app.get('units', [])
             units_list = []
             for unit in units:
-                #TODO: check if plataform is static
+                # TODO: check if plataform is static
                 if unit.get("ProcessName", "") == "web":
                     units_list.append(unit["ID"])
 

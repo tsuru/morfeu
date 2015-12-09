@@ -1,9 +1,6 @@
 import requests
 import logging
 import redis
-import dateutil.parser
-import datetime
-import pytz
 
 from morfeu.tsuru.client import TsuruClient
 from morfeu.settings import TIME_RANGE_IN_HOURS, ESEARCH_HOST, HIPACHE_REDIS_HOST, HIPACHE_REDIS_PORT, TIMEOUT
