@@ -35,7 +35,10 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_list_apps_with_success(self):
 
-        self.mock_list_apps()
+        self.mock_list_apps(processname="web")
+        self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
+
+        self.mock_list_apps(processname="web")
         self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
 
     @httpretty.activate
@@ -51,7 +54,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         """
 
         self.mock_list_apps(platform="static")
-        self.assertEqual(self.tsuru_client.list_apps(), [])
+        self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
 
     @httpretty.activate
     def test_list_apps_by_pool(self):

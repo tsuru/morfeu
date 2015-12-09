@@ -1,7 +1,7 @@
 import requests
 import logging
 from .exceptions import TsuruClientBadResponse
-from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST, PLATFORM_WHITELIST
+from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST, PLATFORM_BLACKLIST
 
 LOG = logging.getLogger(__name__)
 
@@ -64,13 +64,11 @@ class TsuruClient(object):
                 if domain not in app.get("ip", ""):
                     continue
 
-            if app.get("platform", "") in PLATFORM_WHITELIST:
-                continue
-
+            platform = app.get("platform", "")
             units = app.get('units', [])
             units_list = []
             for unit in units:
-                if unit.get("ProcessName", "") == "web":
+                if unit.get("ProcessName", "") == "web" or platform in PLATFORM_BLACKLIST:
                     units_list.append(unit["ID"])
 
             if units_list:

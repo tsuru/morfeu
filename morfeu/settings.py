@@ -12,7 +12,7 @@ TSURU_HOST = os.getenv("TSURU_HOST", "http://localhost")
 TSURU_APP_PROXY = os.getenv("TSURU_APP_PROXY", "")
 
 POOL_WHITELIST = os.getenv("POOL_WHITELIST", "")
-PLATFORM_WHITELIST = os.getenv("PLATFORM_WHITELIST", "static").split(',')
+PLATFORM_BLACKLIST = os.getenv("PLATFORM_BLACKLIST", "static").split(',')
 SLEEP_TIME = int(os.getenv("MORFEU_SLEEP_TIME", "60"))
 
 DOMAIN = os.getenv("DOMAIN", "")
