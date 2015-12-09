@@ -86,7 +86,7 @@ class AppTestCase(unittest.TestCase):
         self.mock_deploy("myapp", date=datetime.datetime.now(pytz.utc).strftime(fmt))
 
         app = TsuruApp(name="myapp")
-        self.assertFalse(app.should_go_to_bed())
+        self.assertTrue(app.should_go_to_bed())
 
     @httpretty.activate
     def test_should_not_go_to_bed_when_app_isnt_new_and_has_hits(self):
@@ -110,7 +110,7 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(unicode(app), "myapp")
 
     @httpretty.activate
-    def test_should_not_go_to_bed_when_emtpy_first_deploy(self):
+    def test_should_go_to_bed_when_emtpy_first_deploy(self):
         url = "http://localhost/.measure-tsuru-*/response_time/_search"
         httpretty.register_uri(httpretty.POST, url,
                                body="{}", content_type="application/json", status=200)
@@ -118,7 +118,7 @@ class AppTestCase(unittest.TestCase):
         self.mock_app("myapp")
         self.mock_deploy("myapp", empty=True)
         app = TsuruApp(name="myapp")
-        self.assertFalse(app.should_go_to_bed())
+        self.assertTrue(app.should_go_to_bed())
 
     @httpretty.activate
     def test_stop_started_app(self):
