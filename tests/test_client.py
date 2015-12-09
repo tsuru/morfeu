@@ -17,13 +17,18 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     def raiseTimeout(request, uri, headers):
         raise requests.Timeout('Connection timed out.')
 
-    @httpretty.activate
-    def test_list_apps_with_success(self):
+    def __exepected_unit(self, name="app1", plataform="static", processname="web"):
         expected_response = json.dumps([{
             "ip": "10.10.10.10",
-            "name": "app1",
-            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": "web"}]
+            "name": name,
+            "platform": plataform,
+            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": processname}]
         }])
+        return expected_response
+
+    @httpretty.activate
+    def test_list_apps_with_success(self):
+        expected_response = self.__exepected_unit()
 
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.list_apps_url(),
                                body=expected_response, content_type="application/json", status=200)
@@ -32,11 +37,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_list_apps_by_domain(self):
-        expected_response = json.dumps([{
-            "ip": "10.10.10.10",
-            "name": "app1",
-            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": "web"}]
-        }])
+        expected_response = self.__exepected_unit()
 
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.list_apps_url(),
                                body=expected_response, content_type="application/json", status=200)
@@ -46,11 +47,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_list_apps_by_pool(self):
         os.environ["POOL_WHITELIST"] = "green"
-        expected_response = json.dumps([{
-            "ip": "10.10.10.10",
-            "name": "app1",
-            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": "web"}]
-        }])
+        expected_response = self.__exepected_unit()
 
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.list_apps_url(pool="green"),
                                body=expected_response, content_type="application/json", status=200)
@@ -59,11 +56,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_list_apps_no_web_apps(self):
-        expected_response = json.dumps([{
-            "ip": "10.10.10.10",
-            "name": "app1",
-            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": "worker"}]
-        }])
+        expected_response = self.__exepected_unit(processname="worker")
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.list_apps_url(),
                                body=expected_response,
                                content_type="application/json",
@@ -73,11 +66,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_list_apps_with_failure(self):
 
-        expected_response = json.dumps([{
-            "ip": "10.10.10.10",
-            "name": "app1",
-            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": "web"}]
-        }])
+        expected_response = self.__exepected_unit(processname="web")
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.list_apps_url(),
                                body=expected_response,
                                content_type="application/json",
@@ -100,10 +89,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_get_app_with_success(self):
         app_name = 'morfeu'
-        expected_response = json.dumps([{
-            u'ip': u'morfeu.cloud.io',
-            u'name': u'morfeu',
-        }])
+        expected_response = self.__exepected_unit(name=app_name)
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_app_url(app_name),
                                body=expected_response,
                                content_type="application/json",
@@ -113,10 +99,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_get_app_with_failure(self):
         app_name = 'morfeu'
-        expected_response = json.dumps([{
-            u'ip': u'morfeu.cloud.io',
-            u'name': u'morfeu',
-        }])
+        expected_response = self.__exepected_unit(name=app_name)
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_app_url(app_name),
                                body=expected_response,
                                content_type="application/json",
