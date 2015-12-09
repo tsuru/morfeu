@@ -81,21 +81,7 @@ class TsuruApp(object):
         if hits_:
             return False
         else:
-            # check the last deploy timestamp
-            first_deploy = self.__first_deploy()
-            if first_deploy:
-                timestamp = dateutil.parser.parse(first_deploy.get("Timestamp", ""))
-                today = datetime.datetime.now(pytz.utc)
-                delta = today - timestamp
-                delta_hours = delta.total_seconds() / 60 / 60
-
-                if delta_hours <= int(time_range):
-                    LOG.info("Ignoring \"{}\", created at \"{}\"".format(self.name, timestamp))
-                    return False
-                else:
-                    return True
-
-            return False
+            return True
 
     def re_route(self, tsuru_app_proxy=None):
 
