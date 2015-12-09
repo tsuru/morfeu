@@ -1,7 +1,7 @@
 import requests
 import logging
 from .exceptions import TsuruClientBadResponse
-from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST
+from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST, PLATFORM_WHITELIST
 
 LOG = logging.getLogger(__name__)
 
@@ -64,10 +64,12 @@ class TsuruClient(object):
                 if domain not in app.get("ip", ""):
                     continue
 
+            if app.get("platform", "") in PLATFORM_WHITELIST:
+                continue
+
             units = app.get('units', [])
             units_list = []
             for unit in units:
-                # TODO: check if plataform is static
                 if unit.get("ProcessName", "") == "web":
                     units_list.append(unit["ID"])
 
@@ -100,8 +102,10 @@ class TsuruClient(object):
             return []
 
     def sleep_app(self, app_name=None, process_name="web"):
+
         if not app_name:
             return False
+
         url = TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name,
                                                                    process_name=process_name)
         try:
