@@ -1,6 +1,7 @@
 import time
 import logging
 import sys
+import threading
 
 import argparse
 from ConfigParser import SafeConfigParser
@@ -16,6 +17,13 @@ logging.basicConfig(format='%(asctime)s %(levelname)s %(module)s %(message)s',
 logging.getLogger("requests").setLevel(logging.WARNING)
 
 LOG = logging.getLogger(__name__)
+
+
+def check_sleep(app_name, dry, apps_to_sleep):
+    tsuru_app = TsuruApp(name=app_name, dry=dry)
+    if tsuru_app.should_go_to_bed():
+        apps_to_sleep.append(tsuru_app)
+
 
 if __name__ == "__main__":
 
@@ -42,13 +50,16 @@ if __name__ == "__main__":
             proxy_app = TsuruApp(name=TSURU_APP_PROXY)
             apps_to_sleep = []
             apps = tsuru_client.list_apps(type="web", domain=DOMAIN)
+            threads = []
 
             for app in apps:
                 app_name = app.keys()[0]
 
-                tsuru_app = TsuruApp(name=app_name, dry=dry)
-                if tsuru_app.should_go_to_bed():
-                    apps_to_sleep.append(tsuru_app)
+                thread = threading.Thread(target=check_sleep, args=(app_name, dry, apps_to_sleep))
+                threads.append(thread)
+                thread.start()
+
+            [x.join() for x in threads]
 
             LOG.info("{0} apps to sleep: {1}".format(len(apps_to_sleep), [app.name for app in apps_to_sleep]))
 
