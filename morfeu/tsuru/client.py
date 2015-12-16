@@ -87,18 +87,6 @@ class TsuruClient(object):
         else:
             return {}
 
-    def list_deploys(self, app_name=None):
-        LOG.info("Getting deploys for \"{}\"".format(app_name))
-        if app_name:
-            url = TsuruClientUrls.get_list_deploy_url_by_app(app_name)
-            try:
-                return self.__get(url=url)
-            except (TsuruClientBadResponse, requests.exceptions.Timeout) as e:
-                LOG.error(e)
-                return []
-        else:
-            return []
-
     def sleep_app(self, app_name=None, process_name="web"):
 
         if not app_name:

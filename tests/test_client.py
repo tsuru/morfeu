@@ -125,47 +125,6 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         self.assertEqual(self.tsuru_client.get_app(), json.loads("{}"))
 
     @httpretty.activate
-    def test_list_deploys_with_success(self):
-        app_name = 'morfeu'
-        expected_response = json.dumps([{
-            "App": "morfeu"
-        }])
-        httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_list_deploy_url_by_app(app_name),
-                               body=expected_response,
-                               content_type="application/json",
-                               status=200)
-        self.assertEqual(self.tsuru_client.list_deploys(app_name=app_name), json.loads(expected_response))
-
-    @httpretty.activate
-    def test_list_deploys_with_failure(self):
-        app_name = 'morfeu'
-        expected_response = json.dumps([{
-            "App": "morfeu"
-        }])
-        httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_list_deploy_url_by_app(app_name),
-                               body=expected_response,
-                               content_type="application/json",
-                               status=500)
-        self.assertEqual(self.tsuru_client.list_deploys(app_name=app_name), json.loads("[]"))
-
-    @httpretty.activate
-    def test_list_deploys_without_app_name(self):
-        self.assertEqual(self.tsuru_client.list_deploys(), json.loads("[]"))
-
-    @httpretty.activate
-    def test_list_deploys_with_timeout(self):
-
-        def raiseTimeout(request, uri, headers):
-            raise requests.Timeout('Connection timed out.')
-
-        app_name = 'morfeu'
-        httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_list_deploy_url_by_app(app_name),
-                               body=raiseTimeout,
-                               content_type="application/json",
-                               status=500)
-        self.assertEqual(self.tsuru_client.list_deploys(app_name=app_name), json.loads("[]"))
-
-    @httpretty.activate
     def test_sleep_app_with_success(self):
         app_name = 'morfeu'
         process_name = "web"
