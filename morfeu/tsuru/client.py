@@ -17,10 +17,6 @@ class TsuruClientUrls(object):
         return "{0}/apps/{1}".format(TSURU_HOST, app_name)
 
     @classmethod
-    def get_list_deploy_url_by_app(cls, app_name):
-        return "{0}/deploys?app={1}".format(TSURU_HOST, app_name)
-
-    @classmethod
     def get_stop_url_by_app_and_process_name(cls, app_name=None, process_name=None):
         return "{0}/apps/{1}/stop?process={2}".format(TSURU_HOST, app_name, process_name)
 
