@@ -110,17 +110,6 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(unicode(app), "myapp")
 
     @httpretty.activate
-    def test_should_go_to_bed_when_emtpy_first_deploy(self):
-        url = "http://localhost/.measure-tsuru-*/response_time/_search"
-        httpretty.register_uri(httpretty.POST, url,
-                               body="{}", content_type="application/json", status=200)
-
-        self.mock_app("myapp")
-        self.mock_deploy("myapp", empty=True)
-        app = TsuruApp(name="myapp")
-        self.assertTrue(app.should_go_to_bed())
-
-    @httpretty.activate
     def test_stop_started_app(self):
         url = TsuruClientUrls.get_stop_url_by_app_and_process_name("myapp", "web")
         httpretty.register_uri(httpretty.POST, url, content_type="application/json", status=200)

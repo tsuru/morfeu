@@ -37,14 +37,6 @@ class TsuruApp(object):
             if unit["Status"] == 'stopped':
                 self.started = False
 
-    def __first_deploy(self):
-        ret = tsuru_client.list_deploys(app_name=self.name)
-        if ret:
-            first_deploy = ret[-1]
-            return first_deploy
-        else:
-            return {}
-
     def stop(self):
         if not self.dry:
             if self.started:
