@@ -13,8 +13,6 @@ make test
 
 In order to run morfeu locally you need to export some environment variables
 
-    export HIPACHE_REDIS_HOST=localhost
-    export HIPACHE_REDIS_PORT=6379
     export MORFEU_ESEARCH_HOST=localhost
     export POOL_WHITELIST=sample
     export TIME_RANGE_IN_HOURS=48
