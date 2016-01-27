@@ -130,8 +130,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         process_name = "web"
         expected_response = json.dumps("")
         httpretty.register_uri(httpretty.POST,
-                               TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name,
-                                                                                    process_name),
+                               TsuruClientUrls.get_stop_url(app_name, process_name),
                                body=expected_response,
                                content_type="application/json",
                                status=200)
@@ -143,8 +142,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         process_name = "web"
         expected_response = json.dumps("")
         httpretty.register_uri(httpretty.POST,
-                               TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name,
-                                                                                    process_name),
+                               TsuruClientUrls.get_stop_url(app_name, process_name),
                                body=expected_response,
                                content_type="application/json",
                                status=500)
@@ -163,8 +161,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         app_name = 'morfeu'
         process_name = "web"
         httpretty.register_uri(httpretty.POST,
-                               TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name,
-                                                                                    process_name),
+                               TsuruClientUrls.get_stop_url(app_name, process_name),
                                body=raiseTimeout,
                                content_type="application/json",
                                status=500)

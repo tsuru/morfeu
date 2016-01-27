@@ -37,6 +37,9 @@ class TsuruApp(object):
             if unit["Status"] == 'stopped':
                 self.started = False
 
+    def sleep(self):
+        self.stop()
+
     def stop(self):
         if not self.dry:
             if self.started:
@@ -71,27 +74,3 @@ class TsuruApp(object):
             return False
         else:
             return True
-
-    def re_route(self, tsuru_app_proxy=None):
-
-        if not self.dry:
-            redis_client = redis.StrictRedis(
-                host=HIPACHE_REDIS_HOST, port=HIPACHE_REDIS_PORT, socket_timeout=self.timeout)
-
-            key = "frontend:{0}".format(self.ip)
-
-            # trim
-            redis_client.ltrim(key, 0, 0)
-
-            # update route
-            for host in tsuru_app_proxy.hosts:
-                redis_client.rpush(key, "http://{0}".format(host))
-
-            try:
-                redis_client.close()
-            except:
-                pass
-
-            LOG.info("App {0} re-routed to {1}".format(self.name, tsuru_app_proxy.hosts))
-        else:
-            LOG.info("App {0} re-routed (fake) to {1}".format(self.name, tsuru_app_proxy.hosts))

@@ -24,25 +24,6 @@ class AppTestCase(unittest.TestCase):
                                body=expected_response, content_type="application/json", status=200)
 
     @httpretty.activate
-    @mock.patch("redis.StrictRedis")
-    def test_re_route(self, redis_mock):
-        redis_conn_mock = mock.Mock()
-        redis_mock.return_value = redis_conn_mock
-
-        self.mock_app("caffeine")
-        self.mock_app("myapp")
-        proxy_app = TsuruApp(name="caffeine")
-
-        app_name = "myapp"
-        app = TsuruApp(name=app_name)
-        app.re_route(tsuru_app_proxy=proxy_app)
-
-        redis_mock.assert_called_with(socket_timeout=30, host='localhost', port=6379)
-        redis_conn_mock.ltrim.assert_called_with('frontend:myapp.tsuru.io', 0, 0)
-        redis_conn_mock.rpush.assert_called_with('frontend:myapp.tsuru.io', 'http://10.10.10.10')
-        redis_conn_mock.close.assert_called_with()
-
-    @httpretty.activate
     def test_should_go_to_bed_when_app_isnt_new_and_has_no_hits(self):
         url = "http://localhost/.measure-tsuru-*/response_time/_search"
         httpretty.register_uri(httpretty.POST, url,
@@ -86,7 +67,7 @@ class AppTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_stop_started_app(self):
-        url = TsuruClientUrls.get_stop_url_by_app_and_process_name("myapp", "web")
+        url = TsuruClientUrls.get_stop_url("myapp", "web")
         httpretty.register_uri(httpretty.POST, url, content_type="application/json", status=200)
 
         self.mock_app("myapp")
@@ -97,7 +78,7 @@ class AppTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_stop_stopped_app(self):
-        url = TsuruClientUrls.get_stop_url_by_app_and_process_name("myapp", "web")
+        url = TsuruClientUrls.get_stop_url("myapp", "web")
         httpretty.register_uri(httpretty.POST, url, content_type="application/json", status=200)
 
         self.mock_app("myapp")

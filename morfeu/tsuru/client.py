@@ -5,7 +5,6 @@ from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST, PL
 
 LOG = logging.getLogger(__name__)
 
-
 class TsuruClientUrls(object):
 
     @classmethod
@@ -17,8 +16,12 @@ class TsuruClientUrls(object):
         return "{0}/apps/{1}".format(TSURU_HOST, app_name)
 
     @classmethod
-    def get_stop_url_by_app_and_process_name(cls, app_name=None, process_name=None):
+    def get_stop_url(cls, app_name=None, process_name=None):
         return "{0}/apps/{1}/stop?process={2}".format(TSURU_HOST, app_name, process_name)
+
+    @classmethod
+    def get_sleep_url(cls, app_name=None, proccess_name=None, proxy=None):
+        return "{0}/apps/{1}/sleep?proxy={3}&process={2}".format(TSURU_HOST, app_name, proccess_name, proxy)
 
 
 class TsuruClient(object):
@@ -88,8 +91,7 @@ class TsuruClient(object):
         if not app_name:
             return False
 
-        url = TsuruClientUrls.get_stop_url_by_app_and_process_name(app_name=app_name,
-                                                                   process_name=process_name)
+        url = TsuruClientUrls.get_stop_url(app_name=app_name, process_name=process_name)
         try:
             req = self.__post(url=url)
             LOG.info("App {0} stopped... {1}".format(app_name, req.content))
