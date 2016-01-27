@@ -15,5 +15,6 @@ TSURU_APP_PROXY_URL = os.getenv("TSURU_APP_PROXY_URL", "")
 POOL_WHITELIST = os.getenv("POOL_WHITELIST", "")
 PLATFORM_BLACKLIST = os.getenv("PLATFORM_BLACKLIST", "static").split(',')
 SLEEP_TIME = int(os.getenv("MORFEU_SLEEP_TIME", "60"))
+APP_WHITELIST = os.getenv("APP_WHITELIST", '').split(',')
 
 DOMAIN = os.getenv("DOMAIN", "")

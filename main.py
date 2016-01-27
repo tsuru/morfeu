@@ -8,7 +8,7 @@ from ConfigParser import SafeConfigParser
 
 from morfeu.tsuru.app import TsuruApp
 from morfeu.tsuru.client import TsuruClient
-from morfeu.settings import TSURU_APP_PROXY, SLEEP_TIME, DOMAIN
+from morfeu.settings import TSURU_APP_PROXY, SLEEP_TIME, DOMAIN, APP_WHITELIST
 
 logging.basicConfig(format='%(asctime)s %(levelname)s %(module)s %(message)s',
                     level=logging.DEBUG,
@@ -50,7 +50,8 @@ if __name__ == "__main__":
             proxy_app = TsuruApp(name=TSURU_APP_PROXY)
             apps_to_sleep = []
             apps = tsuru_client.list_apps(type="web", domain=DOMAIN)
-            apps = [app for app in apps if app.keys() != [TSURU_APP_PROXY]]
+            never_sleep = [TSURU_APP_PROXY] + APP_WHITELIST
+            apps = [app for app in apps if set(app.keys()).intersection(never_sleep) == set([])]
             threads = []
 
             for app in apps:
