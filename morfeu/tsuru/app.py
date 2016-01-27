@@ -1,9 +1,8 @@
 import requests
 import logging
-import redis
 
 from morfeu.tsuru.client import TsuruClient
-from morfeu.settings import TIME_RANGE_IN_HOURS, ESEARCH_HOST, HIPACHE_REDIS_HOST, HIPACHE_REDIS_PORT, TIMEOUT
+from morfeu.settings import TIME_RANGE_IN_HOURS, ESEARCH_HOST, TIMEOUT
 
 LOG = logging.getLogger(__name__)
 

@@ -1,7 +1,6 @@
 import json
 import httpretty
 import unittest
-import mock
 
 from morfeu.tsuru.app import TsuruApp
 from morfeu.tsuru.client import TsuruClientUrls

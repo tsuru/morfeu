@@ -1,9 +1,11 @@
 import requests
 import logging
 from .exceptions import TsuruClientBadResponse
-from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST, PLATFORM_BLACKLIST, TSURU_APP_PROXY_URL
+from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST
+from morfeu.settings import PLATFORM_BLACKLIST, TSURU_APP_PROXY_URL
 
 LOG = logging.getLogger(__name__)
+
 
 class TsuruClientUrls(object):
 
@@ -21,7 +23,10 @@ class TsuruClientUrls(object):
 
     @classmethod
     def get_sleep_url(cls, app_name=None, process_name=None, proxy_url=None):
-        return "{0}/apps/{1}/sleep?proxy={3}&process={2}".format(TSURU_HOST, app_name, process_name, proxy_url)
+        return "{0}/apps/{1}/sleep?proxy={3}&process={2}".format(TSURU_HOST,
+                                                                 app_name,
+                                                                 process_name,
+                                                                 proxy_url)
 
 
 class TsuruClient(object):
