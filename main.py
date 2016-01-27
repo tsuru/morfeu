@@ -50,6 +50,7 @@ if __name__ == "__main__":
             proxy_app = TsuruApp(name=TSURU_APP_PROXY)
             apps_to_sleep = []
             apps = tsuru_client.list_apps(type="web", domain=DOMAIN)
+            apps = [app for app in apps if app.keys() != [TSURU_APP_PROXY]]
             threads = []
 
             for app in apps:
