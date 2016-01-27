@@ -4,9 +4,6 @@ clean:
 deps:
 	@pip install -r requirements_test.txt
 
-all_deps:
-	@pip install -r requirements_test.txt
-
 test: clean deps
 	@coverage run -m unittest discover
 	@coverage report --omit="*/tests/*" --include="./*" -m
