@@ -128,25 +128,33 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     def test_sleep_app_with_success(self):
         app_name = 'morfeu'
         process_name = "web"
+        proxy_url = 'http://fake:123'
+
         expected_response = json.dumps("")
         httpretty.register_uri(httpretty.POST,
-                               TsuruClientUrls.get_stop_url(app_name, process_name),
+                               TsuruClientUrls.get_sleep_url(app_name, process_name, proxy_url),
                                body=expected_response,
                                content_type="application/json",
                                status=200)
-        self.assertTrue(self.tsuru_client.sleep_app(app_name=app_name, process_name="web"))
+        self.assertTrue(self.tsuru_client.sleep_app(app_name=app_name,
+                                                    process_name=process_name,
+                                                    proxy_url=proxy_url))
 
     @httpretty.activate
     def test_sleep_app_with_failure(self):
         app_name = 'morfeu'
         process_name = "web"
+        proxy_url = 'http://fake:123'
+
         expected_response = json.dumps("")
         httpretty.register_uri(httpretty.POST,
-                               TsuruClientUrls.get_stop_url(app_name, process_name),
+                               TsuruClientUrls.get_sleep_url(app_name, process_name, proxy_url),
                                body=expected_response,
                                content_type="application/json",
                                status=500)
-        self.assertFalse(self.tsuru_client.sleep_app(app_name=app_name, process_name="web"))
+        self.assertFalse(self.tsuru_client.sleep_app(app_name=app_name,
+                                                     process_name=process_name,
+                                                     proxy_url=proxy_url))
 
     @httpretty.activate
     def test_sleep_app_without_app_name(self):
@@ -160,12 +168,15 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
 
         app_name = 'morfeu'
         process_name = "web"
+        proxy_url = 'http://fake:123'
         httpretty.register_uri(httpretty.POST,
-                               TsuruClientUrls.get_stop_url(app_name, process_name),
+                               TsuruClientUrls.get_sleep_url(app_name, process_name, proxy_url),
                                body=raiseTimeout,
                                content_type="application/json",
                                status=500)
-        self.assertFalse(self.tsuru_client.sleep_app(app_name=app_name, process_name="web"))
+        self.assertFalse(self.tsuru_client.sleep_app(app_name=app_name,
+                                                     process_name=process_name,
+                                                     proxy_url=proxy_url))
 
 if __name__ == '__main__':
     unittest.main()

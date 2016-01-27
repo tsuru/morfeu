@@ -38,12 +38,18 @@ class TsuruApp(object):
                 self.started = False
 
     def sleep(self):
-        self.stop()
+        if not self.dry:
+            if self.started:
+                tsuru_client.sleep_app(app_name=self.name)
+            else:
+                LOG.info("App {} is already asleep".format(self.name))
+        else:
+            LOG.info("Faking sleep to app {0}".format(self.name))
 
     def stop(self):
         if not self.dry:
             if self.started:
-                tsuru_client.sleep_app(app_name=self.name)
+                tsuru_client.stop_app(app_name=self.name)
             else:
                 LOG.info("App {} is already stopped".format(self.name))
         else:

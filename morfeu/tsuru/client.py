@@ -1,7 +1,7 @@
 import requests
 import logging
 from .exceptions import TsuruClientBadResponse
-from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST, PLATFORM_BLACKLIST
+from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST, PLATFORM_BLACKLIST, TSURU_APP_PROXY_URL
 
 LOG = logging.getLogger(__name__)
 
@@ -20,8 +20,8 @@ class TsuruClientUrls(object):
         return "{0}/apps/{1}/stop?process={2}".format(TSURU_HOST, app_name, process_name)
 
     @classmethod
-    def get_sleep_url(cls, app_name=None, proccess_name=None, proxy=None):
-        return "{0}/apps/{1}/sleep?proxy={3}&process={2}".format(TSURU_HOST, app_name, proccess_name, proxy)
+    def get_sleep_url(cls, app_name=None, process_name=None, proxy_url=None):
+        return "{0}/apps/{1}/sleep?proxy={3}&process={2}".format(TSURU_HOST, app_name, process_name, proxy_url)
 
 
 class TsuruClient(object):
@@ -86,8 +86,7 @@ class TsuruClient(object):
         else:
             return {}
 
-    def sleep_app(self, app_name=None, process_name="web"):
-
+    def stop_app(self, app_name=None, process_name="web"):
         if not app_name:
             return False
 
@@ -95,6 +94,21 @@ class TsuruClient(object):
         try:
             req = self.__post(url=url)
             LOG.info("App {0} stopped... {1}".format(app_name, req.content))
+            return True
+        except (TsuruClientBadResponse, requests.exceptions.Timeout) as e:
+            LOG.error(e)
+            return False
+
+    def sleep_app(self, app_name=None, process_name="web", proxy_url=None):
+        if not app_name:
+            return False
+
+        url = TsuruClientUrls.get_sleep_url(app_name=app_name,
+                                            process_name=process_name,
+                                            proxy_url=TSURU_APP_PROXY_URL)
+        try:
+            req = self.__post(url=url)
+            LOG.info("App {0} asleep... {1}".format(app_name, req.content))
             return True
         except (TsuruClientBadResponse, requests.exceptions.Timeout) as e:
             LOG.error(e)

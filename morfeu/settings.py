@@ -10,6 +10,7 @@ TIME_RANGE_IN_HOURS = os.getenv("MORFEU_TIME_RANGE_IN_HOURS", "1")
 TSURU_TOKEN = os.getenv("TSURU_TOKEN", "token")
 TSURU_HOST = os.getenv("TSURU_HOST", "http://localhost")
 TSURU_APP_PROXY = os.getenv("TSURU_APP_PROXY", "")
+TSURU_APP_PROXY_URL = os.getenv("TSURU_APP_PROXY_URL", "")
 
 POOL_WHITELIST = os.getenv("POOL_WHITELIST", "")
 PLATFORM_BLACKLIST = os.getenv("PLATFORM_BLACKLIST", "static").split(',')
