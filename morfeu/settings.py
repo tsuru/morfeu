@@ -1,6 +1,14 @@
 import os
 
-HIPACHE_REDIS_HOST = os.getenv("HIPACHE_REDIS_HOST", "localhost")
+from pymongo import MongoClient
+
+
+client = MongoClient()
+db = client['test-database']
+
+config = db["config"].find_one()
+
+HIPACHE_REDIS_HOST = config.get("hipache_redis_host", "localhost")
 HIPACHE_REDIS_PORT = int(os.getenv("HIPACHE_REDIS_PORT", "6379"))
 
 ESEARCH_HOST = os.getenv("MORFEU_ESEARCH_HOST", "localhost")
