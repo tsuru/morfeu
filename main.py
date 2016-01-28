@@ -66,7 +66,7 @@ if __name__ == "__main__":
             LOG.info("{0} apps to sleep: {1}".format(len(apps_to_sleep), [app.name for app in apps_to_sleep]))
 
             for app in apps_to_sleep:
-                app.sleep()
+                app.stop()
 
             if not daemon:
                 break
