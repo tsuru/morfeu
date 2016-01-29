@@ -2,8 +2,10 @@ import os
 
 from pymongo import MongoClient
 
-client = MongoClient()
-db = client['test-database']
+MONGODB_URI = os.getenv("DBAAS_MONGODB_ENDPOINT", "mongodb://localhost:27017/")
+
+client = MongoClient(MONGODB_URI)
+db = client['morfeu']
 
 config = db["config"].find_one() or {}
 
