@@ -9,20 +9,20 @@ db = client['test-database']
 config = db["config"].find_one()
 
 HIPACHE_REDIS_HOST = config.get("hipache_redis_host", "localhost")
-HIPACHE_REDIS_PORT = int(os.getenv("HIPACHE_REDIS_PORT", "6379"))
+HIPACHE_REDIS_PORT = int(config.get("hipache_redis_port", "6379"))
 
-ESEARCH_HOST = os.getenv("MORFEU_ESEARCH_HOST", "localhost")
-TIMEOUT = int(os.getenv("MORFEU_TIMEOUT", "30"))
-TIME_RANGE_IN_HOURS = os.getenv("MORFEU_TIME_RANGE_IN_HOURS", "1")
+ESEARCH_HOST = config.get("elastic_search_host", "localhost")
+TIMEOUT = int(config.get("timeout", "30"))
+TIME_RANGE_IN_HOURS = config.get("time_range_in_hours", "1")
 
 TSURU_TOKEN = os.getenv("TSURU_TOKEN", "token")
 TSURU_HOST = os.getenv("TSURU_HOST", "http://localhost")
-TSURU_APP_PROXY = os.getenv("TSURU_APP_PROXY", "")
-TSURU_APP_PROXY_URL = os.getenv("TSURU_APP_PROXY_URL", "")
+TSURU_APP_PROXY = config.get("app_proxy", "")
+TSURU_APP_PROXY_URL = config.get("proxy_url", "")
 
-POOL_WHITELIST = os.getenv("POOL_WHITELIST", "")
-PLATFORM_BLACKLIST = os.getenv("PLATFORM_BLACKLIST", "static").split(',')
-SLEEP_TIME = int(os.getenv("MORFEU_SLEEP_TIME", "60"))
-APP_WHITELIST = os.getenv("APP_WHITELIST", '').split(',')
+POOL_WHITELIST = config.get("pool_whitelist", "")
+PLATFORM_BLACKLIST = config.get("platform_blacklist", "static").split(',')
+SLEEP_TIME = int(config.get("sleep_time", "60"))
+APP_WHITELIST = config.get("app_whitelist", '').split(',')
 
-DOMAIN = os.getenv("DOMAIN", "")
+DOMAIN = config.get("domain", "")
