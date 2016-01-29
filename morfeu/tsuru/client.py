@@ -35,14 +35,14 @@ class TsuruClient(object):
         self.timeout = TIMEOUT
         self.headers = {'Authorization': "bearer {0}".format(TSURU_TOKEN)}
 
-    def __get(self, url=None, params={}):
+    def __get(self, url, params=None):
         r = requests.get(url, params=params, headers=self.headers, timeout=self.timeout)
         if r.status_code == requests.codes.ok:
             return r.json()
         else:
             raise TsuruClientBadResponse("Bad Request {}".format(r.status_code))
 
-    def __post(self, url=None, payload={}):
+    def __post(self, url, payload=None):
         r = requests.post(url, data=payload, headers=self.headers, timeout=self.timeout)
         if r.status_code != requests.codes.ok:
             raise TsuruClientBadResponse("Bad Request {}".format(r.status_code))
