@@ -2,3 +2,4 @@ language: python
 sudo: false
 install: make deps
 script: make test
+services: mongodb
