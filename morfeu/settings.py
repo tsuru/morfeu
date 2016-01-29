@@ -5,7 +5,7 @@ from pymongo import MongoClient
 MONGODB_URI = os.getenv("DBAAS_MONGODB_ENDPOINT", "mongodb://localhost:27017/")
 
 client = MongoClient(MONGODB_URI)
-db = client['morfeu']
+db = client['morfeudb']
 
 config = db["config"].find_one() or {}
 
