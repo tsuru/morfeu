@@ -2,11 +2,10 @@ import os
 
 from pymongo import MongoClient
 
-
 client = MongoClient()
 db = client['test-database']
 
-config = db["config"].find_one()
+config = db["config"].find_one() or {}
 
 HIPACHE_REDIS_HOST = config.get("hipache_redis_host", "localhost")
 HIPACHE_REDIS_PORT = int(config.get("hipache_redis_port", "6379"))
