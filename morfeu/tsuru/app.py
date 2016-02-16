@@ -12,7 +12,6 @@ tsuru_client = TsuruClient()
 class TsuruApp(object):
 
     def __init__(self, name=None, dry=False):
-        self.units = []
         self.dry = dry
         self.name = name
         self.timeout = TIMEOUT
@@ -30,16 +29,16 @@ class TsuruApp(object):
         self.pool = app_info.get("pool")
 
     def sleep(self):
-        if not self.dry:
-            tsuru_client.sleep_app(app_name=self.name)
-        else:
+        if self.dry:
             LOG.info("Faking sleep to app {0}".format(self.name))
+        else:
+            tsuru_client.sleep_app(app_name=self.name)
 
     def stop(self):
-        if not self.dry:
-            tsuru_client.stop_app(app_name=self.name)
-        else:
+        if self.dry:
             LOG.info("Faking stop to app {0}".format(self.name))
+        else:
+            tsuru_client.stop_app(app_name=self.name)
 
     def should_go_to_bed(self, time_range=TIME_RANGE_IN_HOURS):
         payload = {
@@ -62,7 +61,4 @@ class TsuruApp(object):
         hits_ = hits.get("hits", [])
         LOG.info("Getting hits for \"{}\"".format(self.name))
 
-        if hits_:
-            return False
-        else:
-            return True
+        return not hits_
