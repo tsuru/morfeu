@@ -4,6 +4,7 @@ import unittest
 
 from morfeu.tsuru.app import TsuruApp
 from morfeu.tsuru.client import TsuruClientUrls
+from morfeu.settings import ESEARCH_HOST
 
 
 class AppTestCase(unittest.TestCase):
@@ -24,7 +25,7 @@ class AppTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_should_go_to_bed_when_app_isnt_new_and_has_no_hits(self):
-        url = "http://localhost/.measure-tsuru-*/response_time/_search"
+        url = "http://{0}/.measure-tsuru-*/response_time/_search".format(ESEARCH_HOST)
         httpretty.register_uri(httpretty.POST, url,
                                body="{}", content_type="application/json", status=200)
 
@@ -35,7 +36,7 @@ class AppTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_should_not_go_to_bed_when_app_is_new_and_has_no_hits(self):
-        url = "http://localhost/.measure-tsuru-*/response_time/_search"
+        url = "http://{0}/.measure-tsuru-*/response_time/_search".format(ESEARCH_HOST)
         httpretty.register_uri(httpretty.POST, url,
                                body="{}", content_type="application/json", status=200)
 
@@ -46,7 +47,7 @@ class AppTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_should_not_go_to_bed_when_app_isnt_new_and_has_hits(self):
-        url = "http://localhost/.measure-tsuru-*/response_time/_search"
+        url = "http://{0}/.measure-tsuru-*/response_time/_search".format(ESEARCH_HOST)
         httpretty.register_uri(httpretty.POST, url,
                                body='{"hits": {"hits": [1, 2, 3]}}',
                                content_type="application/json",
