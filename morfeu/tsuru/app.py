@@ -16,7 +16,6 @@ class TsuruApp(object):
         self.dry = dry
         self.name = name
         self.timeout = TIMEOUT
-        self.started = True
         self.ip = None
         self.pool = None
 
@@ -30,25 +29,15 @@ class TsuruApp(object):
         self.ip = app_info.get("ip")
         self.pool = app_info.get("pool")
 
-        for unit in app_info.get("units"):
-            if unit["Status"] == 'stopped':
-                self.started = False
-
     def sleep(self):
         if not self.dry:
-            if self.started:
-                tsuru_client.sleep_app(app_name=self.name)
-            else:
-                LOG.info("App {} is already asleep".format(self.name))
+            tsuru_client.sleep_app(app_name=self.name)
         else:
             LOG.info("Faking sleep to app {0}".format(self.name))
 
     def stop(self):
         if not self.dry:
-            if self.started:
-                tsuru_client.stop_app(app_name=self.name)
-            else:
-                LOG.info("App {} is already stopped".format(self.name))
+            tsuru_client.stop_app(app_name=self.name)
         else:
             LOG.info("Faking stop to app {0}".format(self.name))
 
