@@ -19,7 +19,6 @@ class TsuruApp(object):
         self.started = True
         self.ip = None
         self.pool = None
-        self.hosts = []
 
         self.__load_info()
 
@@ -32,7 +31,6 @@ class TsuruApp(object):
         self.pool = app_info.get("pool")
 
         for unit in app_info.get("units"):
-            self.hosts.append(unit["Address"]["Host"])
             if unit["Status"] == 'stopped':
                 self.started = False
 
