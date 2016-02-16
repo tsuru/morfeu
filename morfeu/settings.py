@@ -2,7 +2,7 @@ import os
 
 from pymongo import MongoClient
 
-MONGODB_URI = os.getenv("DBAAS_MONGODB_ENDPOINT", "mongodb://localhost:27017/")
+MONGODB_URI = os.getenv("MONGODB_ENDPOINT", "mongodb://localhost:27017/")
 
 client = MongoClient(MONGODB_URI)
 db = client['morfeudb']

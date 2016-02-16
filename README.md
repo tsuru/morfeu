@@ -13,7 +13,7 @@ make test
 
 In order to run morfeu locally you need to export some environment variables
 
-    export DBAAS_MONGODB_ENDPOINT="mongodb://localhost:27017/"
+    export MONGODB_ENDPOINT="mongodb://localhost:27017/"
     export TSURU_TOKEN=fill me in
     export TSURU_HOST="http://localhost"
 
