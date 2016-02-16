@@ -104,13 +104,13 @@ class TsuruClient(object):
             LOG.error(e)
             return False
 
-    def sleep_app(self, app_name=None, process_name="web", proxy_url=None):
+    def sleep_app(self, app_name=None, process_name="web", proxy_url=TSURU_APP_PROXY_URL):
         if not app_name:
             return False
 
         url = TsuruClientUrls.get_sleep_url(app_name=app_name,
                                             process_name=process_name,
-                                            proxy_url=TSURU_APP_PROXY_URL)
+                                            proxy_url=proxy_url)
         try:
             req = self.__post(url=url)
             LOG.info("App {0} asleep... {1}".format(app_name, req.content))
