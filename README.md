@@ -13,11 +13,7 @@ make test
 
 In order to run morfeu locally you need to export some environment variables
 
-    export MORFEU_ESEARCH_HOST=localhost
-    export POOL_WHITELIST=sample
-    export TIME_RANGE_IN_HOURS=48
-    export TSURU_APP_PROXY=tsuru-caffeine-proxy
-    export TSURU_APP_PROXY_URL=http://url-to-tsuru-caffeine-proxy
+    export DBAAS_MONGODB_ENDPOINT="mongodb://localhost:27017/"
     export TSURU_TOKEN=fill me in
     export TSURU_HOST="http://localhost"
 
@@ -25,6 +21,19 @@ Replace the env variables above with the appropriate ones. To get the TSURU_TOKE
 
     tsuru login
     tsuru token-show
+
+All the other configurations stay in the database `config`:
+
+    elastic_search_host="localhost"
+    timeout=30
+    time_range_in_hours=1
+    app_proxy=name of the proxy app
+    proxy_url=url for the proxy app
+    pool_whitelist=list of pools of apps that may get asleep
+    platform_blacklist=list of platforms of apps that may get asleep
+    sleep_time=60
+    app_whitelist=list of apps that can never get asleep
+    domain=domain of apps that can never get asleep
 
 ## standalone dry mode
 
