@@ -1,10 +1,11 @@
 import json
 import httpretty
 import unittest
+import re
 
 from morfeu.tsuru.app import TsuruApp
 from morfeu.tsuru.client import TsuruClientUrls
-from morfeu.settings import ESEARCH_HOST
+from morfeu.settings import ESEARCH_HOST, TSURU_APP_PROXY_URL
 
 
 class AppTestCase(unittest.TestCase):
@@ -66,25 +67,30 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(unicode(app), "myapp")
 
     @httpretty.activate
-    def test_stop_started_app(self):
+    def test_stop_app(self):
         url = TsuruClientUrls.get_stop_url("myapp", "web")
         httpretty.register_uri(httpretty.POST, url, content_type="application/json", status=200)
 
         self.mock_app("myapp")
 
         app = TsuruApp(name="myapp")
-        app.started = True
         app.stop()
+
+        path = re.search('^http://[^/]+(.*)$', url).group(1)
+        self.assertEqual(httpretty.last_request().path, path)
 
     @httpretty.activate
-    def test_stop_stopped_app(self):
-        url = TsuruClientUrls.get_stop_url("myapp", "web")
+    def test_sleep_app(self):
+        url = TsuruClientUrls.get_sleep_url("myapp", "web", TSURU_APP_PROXY_URL)
         httpretty.register_uri(httpretty.POST, url, content_type="application/json", status=200)
 
         self.mock_app("myapp")
 
         app = TsuruApp(name="myapp")
-        app.stop()
+        app.sleep()
+
+        path = re.search('^http://[^/]+(.*)$', url).group(1)
+        self.assertEqual(httpretty.last_request().path, path)
 
 if __name__ == '__main__':
     unittest.main()
