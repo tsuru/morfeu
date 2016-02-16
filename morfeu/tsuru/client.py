@@ -10,8 +10,8 @@ LOG = logging.getLogger(__name__)
 class TsuruClientUrls(object):
 
     @classmethod
-    def list_apps_url(cls, pool=""):
-        return "{}/apps?pool={}".format(TSURU_HOST, pool)
+    def list_apps_url(cls, pool="", status=""):
+        return "{}/apps?pool={}&status={}".format(TSURU_HOST, pool, status)
 
     @classmethod
     def get_app_url(cls, app_name):
@@ -54,7 +54,7 @@ class TsuruClient(object):
         :returns [{"units": [{"ProcessName" : "web"}]}]
         """
         LOG.info("Getting apps of type \"{}\" and domain \"{}\"".format(type, domain))
-        url = TsuruClientUrls.list_apps_url(pool=POOL_WHITELIST)
+        url = TsuruClientUrls.list_apps_url(pool=POOL_WHITELIST, status="started")
         app_list = []
 
         try:

@@ -17,7 +17,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     def raiseTimeout(request, uri, headers):
         raise requests.Timeout('Connection timed out.')
 
-    def __exepected_unit(self, name="app1", platform="python", processname="web"):
+    def __expected_unit(self, name="app1", platform="python", processname="web"):
         expected_response = json.dumps([{
             "ip": "10.10.10.10",
             "name": name,
@@ -27,7 +27,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         return expected_response
 
     def mock_list_apps(self, pool="", processname="web", platform="python", status=200):
-        expected_response = self.__exepected_unit(processname=processname, platform=platform)
+        expected_response = self.__expected_unit(processname=processname, platform=platform)
 
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.list_apps_url(pool=pool),
                                body=expected_response, content_type="application/json", status=status)
@@ -91,7 +91,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_get_app_with_success(self):
         app_name = 'morfeu'
-        expected_response = self.__exepected_unit(name=app_name)
+        expected_response = self.__expected_unit(name=app_name)
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_app_url(app_name),
                                body=expected_response,
                                content_type="application/json",
@@ -101,7 +101,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_get_app_with_failure(self):
         app_name = 'morfeu'
-        expected_response = self.__exepected_unit(name=app_name)
+        expected_response = self.__expected_unit(name=app_name)
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_app_url(app_name),
                                body=expected_response,
                                content_type="application/json",
