@@ -47,7 +47,6 @@ if __name__ == "__main__":
         try:
             LOG.info("Running morfeu...")
 
-            proxy_app = TsuruApp(name=TSURU_APP_PROXY)
             apps_to_sleep = []
             apps = tsuru_client.list_apps(type="web", domain=DOMAIN)
             never_sleep = [TSURU_APP_PROXY] + APP_WHITELIST
