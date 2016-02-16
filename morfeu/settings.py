@@ -9,9 +9,6 @@ db = client['morfeudb']
 
 config = db["config"].find_one() or {}
 
-HIPACHE_REDIS_HOST = config.get("hipache_redis_host", "localhost")
-HIPACHE_REDIS_PORT = int(config.get("hipache_redis_port", "6379"))
-
 ESEARCH_HOST = config.get("elastic_search_host", "localhost")
 TIMEOUT = int(config.get("timeout", "30"))
 TIME_RANGE_IN_HOURS = config.get("time_range_in_hours", "1")
