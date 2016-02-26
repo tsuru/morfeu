@@ -18,9 +18,9 @@ TSURU_HOST = os.getenv("TSURU_HOST", "http://localhost")
 TSURU_APP_PROXY = config.get("app_proxy", "")
 TSURU_APP_PROXY_URL = config.get("proxy_url", "")
 
-POOL_WHITELIST = config.get("pool_whitelist", "")
-PLATFORM_BLACKLIST = config.get("platform_blacklist", "static").split(',')
+POOLS = config.get("pools", "")
+STATIC_PLATFORM_NAME = config.get("static_platform_name", "static")
 SLEEP_TIME = int(config.get("sleep_time", "60"))
-APP_WHITELIST = config.get("app_whitelist", '').split(',')
+SKIP_APPS = config.get("skip_apps", '').split(',')
 
 DOMAIN = config.get("domain", "")

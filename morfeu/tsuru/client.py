@@ -1,8 +1,7 @@
 import requests
 import logging
 from .exceptions import TsuruClientBadResponse
-from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOL_WHITELIST
-from morfeu.settings import PLATFORM_BLACKLIST, TSURU_APP_PROXY_URL
+from morfeu.settings import TSURU_TOKEN, TIMEOUT, TSURU_HOST, POOLS, STATIC_PLATFORM_NAME, TSURU_APP_PROXY_URL
 
 LOG = logging.getLogger(__name__)
 
@@ -54,7 +53,7 @@ class TsuruClient(object):
         :returns [{"units": [{"ProcessName" : "web"}]}]
         """
         LOG.info("Getting apps of type \"{}\" and domain \"{}\"".format(type, domain))
-        url = TsuruClientUrls.list_apps_url(pool=POOL_WHITELIST, status="started")
+        url = TsuruClientUrls.list_apps_url(pool=POOLS, status="started")
         app_list = []
 
         try:
@@ -71,7 +70,7 @@ class TsuruClient(object):
             units = app.get('units', [])
             units_list = []
             for unit in units:
-                if unit.get("ProcessName", "") == "web" or platform in PLATFORM_BLACKLIST:
+                if unit.get("ProcessName", "") == "web" or platform == STATIC_PLATFORM_NAME:
                     units_list.append(unit["ID"])
 
             if units_list:

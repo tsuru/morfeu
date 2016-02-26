@@ -59,7 +59,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_list_apps_by_pool(self):
 
-        os.environ["POOL_WHITELIST"] = "green"
+        os.environ["POOLS"] = "green"
         self.mock_list_apps(pool="green")
         self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
 

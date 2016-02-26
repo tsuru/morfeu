@@ -29,10 +29,10 @@ All the other configurations stay in the database `config`:
     time_range_in_hours=1
     app_proxy=name of the proxy app
     proxy_url=url for the proxy app
-    pool_whitelist=list of pools of apps that may get asleep
-    platform_blacklist=list of platforms of apps that may get asleep
+    pools=list of pools of apps that may get asleep, separated by commas
+    static_platform_name=name of the static platform
     sleep_time=60
-    app_whitelist=list of apps that can never get asleep
+    skip_apps=list of apps that can never get asleep, separated by commas
     domain=domain of apps that can never get asleep
 
 ## standalone dry mode
