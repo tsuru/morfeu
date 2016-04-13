@@ -56,6 +56,11 @@ class TsuruApp(object):
 
         url = "http://{0}/.measure-tsuru-*/response_time/_search".format(ESEARCH_HOST)
         req = requests.post(url, json=payload, timeout=self.timeout)
+
+        if req.status_code != 200:
+            LOG.info("Error getting app {} metrics data".format(self.name))
+            return False
+
         response = req.json()
         hits = response.get("hits", {})
         hits_ = hits.get("hits", [])

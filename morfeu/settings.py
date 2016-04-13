@@ -11,7 +11,7 @@ config = db["config"].find_one() or {}
 
 ESEARCH_HOST = config.get("elastic_search_host", "localhost")
 TIMEOUT = int(config.get("timeout", "30"))
-TIME_RANGE_IN_HOURS = config.get("time_range_in_hours", "1")
+TIME_RANGE_IN_HOURS = int(config.get("time_range_in_hours", "1"))
 
 TSURU_TOKEN = os.getenv("TSURU_TOKEN", "token")
 TSURU_HOST = os.getenv("TSURU_HOST", "http://localhost")
