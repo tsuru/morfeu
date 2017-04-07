@@ -1,5 +1,4 @@
 import json
-import os
 import unittest
 import httpretty
 import requests
@@ -17,61 +16,57 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     def raiseTimeout(request, uri, headers):
         raise requests.Timeout('Connection timed out.')
 
-    def __expected_unit(self, name="app1", platform="python", processname="web"):
+    def __expected_unit(self, name="app1", platform="python", process_name="web"):
         expected_response = json.dumps([{
-            "ip": "10.10.10.10",
             "name": name,
             "platform": platform,
-            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": processname}],
+            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": process_name}],
             "cname": ["cname1"],
-            "ip": "ip1"
+            "ip": "myapp.mycloud.com"
         }])
         return expected_response
 
-    def mock_list_apps(self, pool="", processname="web", platform="python", status=200):
-        expected_response = self.__expected_unit(processname=processname, platform=platform)
+    def mock_list_apps(self, pool="", process_name="web", platform="python", status=200):
+        expected_response = self.__expected_unit(process_name=process_name, platform=platform)
 
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.list_apps_url(pool=pool),
                                body=expected_response, content_type="application/json", status=status)
 
     @httpretty.activate
-    def test_list_apps_with_success(self):
+    def test_list_apps_by_process_name(self):
 
-        self.mock_list_apps(processname="web")
-        self.assertEqual(self.tsuru_client.list_apps(), [{"app1": {"cname": ["cname1"], "ip": "ip1"}}])
+        self.mock_list_apps(process_name="worker")
+        self.assertEqual(self.tsuru_client.list_apps(), [])
+        self.assertEqual(self.tsuru_client.list_apps(process_name="worker"), [{"app1": {"cname": ["cname1"], "ip": "myapp.mycloud.com"}}])
 
     @httpretty.activate
     def test_list_apps_by_domain(self):
 
         self.mock_list_apps()
         self.assertEqual(self.tsuru_client.list_apps(domain="11"), [])
+        self.assertEqual(self.tsuru_client.list_apps(domain="mycloud.com"), [{"app1": {"cname": ["cname1"], "ip": "myapp.mycloud.com"}}])
 
     @httpretty.activate
-    def test_list_static_apps(self):
-        """
-        static apps should not be put to sleep. it should return an empty list
-        """
-
+    def test_list_always_include_static_apps(self):
         self.mock_list_apps(platform="static")
-        self.assertEqual(self.tsuru_client.list_apps(), [{"app1": {"cname": ["cname1"], "ip": "ip1"}}])
+        self.assertEqual(self.tsuru_client.list_apps(process_name="worker"), [{"app1": {"cname": ["cname1"], "ip": "myapp.mycloud.com"}}])
 
     @httpretty.activate
     def test_list_apps_by_pool(self):
 
-        os.environ["POOLS"] = "green"
         self.mock_list_apps(pool="green")
-        self.assertEqual(self.tsuru_client.list_apps(), [{"app1": {"cname": ["cname1"], "ip": "ip1"}}])
+        self.assertEqual(self.tsuru_client.list_apps(), [{"app1": {"cname": ["cname1"], "ip": "myapp.mycloud.com"}}])
 
     @httpretty.activate
     def test_list_apps_no_web_apps(self):
 
-        self.mock_list_apps(processname="worker")
+        self.mock_list_apps(process_name="worker")
         self.assertEqual(self.tsuru_client.list_apps(), [])
 
     @httpretty.activate
     def test_list_apps_with_failure(self):
 
-        self.mock_list_apps(processname="web", status=500)
+        self.mock_list_apps(process_name="web", status=500)
         self.assertEqual(self.tsuru_client.list_apps(), [])
 
     @httpretty.activate
