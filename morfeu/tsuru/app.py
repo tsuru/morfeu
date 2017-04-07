@@ -15,8 +15,6 @@ class TsuruApp(object):
         self.dry = dry
         self.name = name
         self.timeout = TIMEOUT
-        self.ip = None
-        self.pool = None
 
         self.__load_info()
 
@@ -25,8 +23,9 @@ class TsuruApp(object):
 
     def __load_info(self):
         app_info = tsuru_client.get_app(self.name)
-        self.ip = app_info.get("ip")
-        self.pool = app_info.get("pool")
+        self.ip = app_info.get("ip", "")
+        self.pool = app_info.get("pool", "")
+        self.cname = app_info.get("cname", [])
 
     def sleep(self):
         if self.dry:

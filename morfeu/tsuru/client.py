@@ -66,11 +66,16 @@ class TsuruClient(object):
             if domain and domain not in app.get("ip", ""):
                 continue
 
-            platform = app.get("platform", "")
+            platform = app.get("platform")
             units = app.get("units", [])
             for unit in units:
-                if unit.get("ProcessName", "") == process_name or platform == STATIC_PLATFORM_NAME:
-                    app_list.append({app["name"]: {"cname": app["cname"], "ip": app["ip"]}})
+                if unit.get("Status") == "started" and \
+                        (unit.get("ProcessName") == process_name or
+                            platform == STATIC_PLATFORM_NAME):
+                    app_list.append({app["name"]: {
+                        "cname": app["cname"],
+                        "ip": app["ip"]
+                    }})
                     break
 
         return app_list

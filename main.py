@@ -48,11 +48,12 @@ if __name__ == "__main__":
             LOG.info("Running morfeu...")
 
             apps_to_sleep = []
-            apps = tsuru_client.list_apps(type="web", domain=DOMAIN)
+            apps = tsuru_client.list_apps(process_name="web", domain=DOMAIN)
             never_sleep = [TSURU_APP_PROXY] + SKIP_APPS
             apps = [app for app in apps if set(app.keys()).intersection(never_sleep) == set([])]
             threads = []
 
+            LOG.info("Checking {} apps".format(len(apps)))
             for app in apps:
                 app_name = app.keys()[0]
 
