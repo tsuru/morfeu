@@ -5,7 +5,7 @@ import re
 from mock import patch
 from morfeu.tsuru.app import TsuruApp
 from morfeu.tsuru.client import TsuruClientUrls
-from morfeu.settings import ESEARCH_HOST, TSURU_APP_PROXY_URL
+from morfeu.settings import TSURU_APP_PROXY_URL
 from morfeu.graylog import GraylogClient
 
 

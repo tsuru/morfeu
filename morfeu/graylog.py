@@ -7,6 +7,7 @@ from morfeu.settings import TIME_RANGE_IN_HOURS
 
 LOG = logging.getLogger(__name__)
 
+
 class GraylogClient(object):
     def __init__(self, app):
         self.app = app
@@ -17,13 +18,19 @@ class GraylogClient(object):
         username = os.getenv("GRAYLOG_USER")
         password = os.getenv("GRAYLOG_PASSWORD")
         stream = os.getenv("GRAYLOG_STREAM")
-        self.client = graylog_api.GraylogAPI(host=host, port=port, username=username, password=password, default_stream=stream, scheme=scheme)
+        self.client = graylog_api.GraylogAPI(
+                host=host, port=port, username=username, password=password,
+                default_stream=stream, scheme=scheme
+        )
 
     def search(self):
         query = self.__build_query()
         if not query:
             return []
-        search_query = graylog_api.SearchQuery(search_range=self.__build_range(), query=self.__build_query(), limit=1, fields="")
+        search_query = graylog_api.SearchQuery(
+                search_range=self.__build_range(),
+                query=self.__build_query(), limit=1, fields=""
+        )
         return self.client.search(search_query).messages
 
     def __build_query(self):
@@ -40,4 +47,3 @@ class GraylogClient(object):
         search_to = arrow.now(LOCAL_TIMEZONE)
         search_from = search_to.replace(seconds=-time_range)
         return graylog_api.SearchRange(from_time=search_from, to_time=search_to)
-
