@@ -38,6 +38,8 @@ class TsuruClient(object):
         r = requests.get(url, params=params, headers=self.headers, timeout=self.timeout)
         if r.status_code == requests.codes.ok:
             return r.json()
+        elif r.status_code == requests.codes.no_content:
+            return []
         else:
             raise TsuruClientBadResponse("Bad Request {}".format(r.status_code))
 

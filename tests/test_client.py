@@ -20,7 +20,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         expected_response = json.dumps([{
             "name": name,
             "platform": platform,
-            "units": [{"ID": "app1/0", "Status": unit_status, "ProcessName": process_name}],
+            "units": [{"Status": unit_status, "ProcessName": process_name}],
             "cname": ["cname1"],
             "ip": "myapp.mycloud.com"
         }])
@@ -86,6 +86,14 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
                                body=raiseTimeout,
                                content_type="application/json",
                                status=500)
+        self.assertEqual(self.tsuru_client.list_apps(), [])
+
+    @httpretty.activate
+    def test_list_apps_without_content(self):
+        httpretty.register_uri(method=httpretty.GET,
+                               uri=TsuruClientUrls.list_apps_url(),
+                               content_type="application/json",
+                               status=204)
         self.assertEqual(self.tsuru_client.list_apps(), [])
 
     @httpretty.activate
