@@ -25,16 +25,20 @@ class AppTestCase(unittest.TestCase):
         httpretty.register_uri(httpretty.GET, TsuruClientUrls.get_app_url(app),
                                body=expected_response, content_type="application/json", status=200)
 
+    @httpretty.activate
     @patch.object(GraylogClient, "search")
     def test_should_go_to_bed_when_app_didnt_have_access(self, search):
-        search.return_value = []
+        self.mock_app("myapp")
         app = TsuruApp(name="myapp")
+        search.return_value = []
         self.assertTrue(app.should_go_to_bed())
 
+    @httpretty.activate
     @patch.object(GraylogClient, "search")
     def test_should_not_go_to_bed_when_app_had_access(self, search):
-        search.return_value = ["message"]
+        self.mock_app("myapp")
         app = TsuruApp(name="myapp")
+        search.return_value = ["message"]
         self.assertFalse(app.should_go_to_bed())
 
     @httpretty.activate
