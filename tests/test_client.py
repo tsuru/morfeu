@@ -48,6 +48,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
         self.assertEqual(self.tsuru_client.list_apps(domain="11"), [])
         self.assertEqual(self.tsuru_client.list_apps(domain="mycloud.com"),
                          [{"app1": {"cname": ["cname1"], "ip": "myapp.mycloud.com"}}])
+        self.assertEqual(self.tsuru_client.list_apps(domain="cloud.com"), [])
 
     @httpretty.activate
     def test_list_always_include_static_apps(self):

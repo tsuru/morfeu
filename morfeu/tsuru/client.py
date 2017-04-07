@@ -65,7 +65,7 @@ class TsuruClient(object):
             return app_list
 
         for app in apps:
-            if domain and domain not in app.get("ip", ""):
+            if domain and ".{}".format(domain) not in app.get("ip", ""):
                 continue
 
             platform = app.get("platform")
