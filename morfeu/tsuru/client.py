@@ -50,7 +50,7 @@ class TsuruClient(object):
 
     def list_apps(self, type=None, domain=None):
         """
-        :returns [{"units": [{"ProcessName" : "web"}]}]
+        :returns [{"myapp": {"units": ["unit-id1", "unit-id2"]}}]
         """
         LOG.info("Getting apps of type \"{}\" and domain \"{}\"".format(type, domain))
         url = TsuruClientUrls.list_apps_url(pool=POOLS, status="started")
@@ -67,14 +67,11 @@ class TsuruClient(object):
                 continue
 
             platform = app.get("platform", "")
-            units = app.get('units', [])
-            units_list = []
+            units = app.get("units", [])
             for unit in units:
                 if unit.get("ProcessName", "") == "web" or platform == STATIC_PLATFORM_NAME:
-                    units_list.append(unit["ID"])
-
-            if units_list:
-                app_list.append({app["name"]: units_list})
+                    app_list.append({app["name"]: {"cname": app["cname"], "ip": app["ip"]}})
+                    break
 
         return app_list
 

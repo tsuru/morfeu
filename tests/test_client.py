@@ -22,7 +22,9 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
             "ip": "10.10.10.10",
             "name": name,
             "platform": platform,
-            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": processname}]
+            "units": [{"ID": "app1/0", "Status": "started", "ProcessName": processname}],
+            "cname": ["cname1"],
+            "ip": "ip1"
         }])
         return expected_response
 
@@ -36,10 +38,7 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     def test_list_apps_with_success(self):
 
         self.mock_list_apps(processname="web")
-        self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
-
-        self.mock_list_apps(processname="web")
-        self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
+        self.assertEqual(self.tsuru_client.list_apps(), [{"app1": {"cname": ["cname1"], "ip": "ip1"}}])
 
     @httpretty.activate
     def test_list_apps_by_domain(self):
@@ -50,18 +49,18 @@ class MorfeuTsuruClientTestCase(unittest.TestCase):
     @httpretty.activate
     def test_list_static_apps(self):
         """
-        static apps should not be put slepp. it should return an empty list
+        static apps should not be put to sleep. it should return an empty list
         """
 
         self.mock_list_apps(platform="static")
-        self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
+        self.assertEqual(self.tsuru_client.list_apps(), [{"app1": {"cname": ["cname1"], "ip": "ip1"}}])
 
     @httpretty.activate
     def test_list_apps_by_pool(self):
 
         os.environ["POOLS"] = "green"
         self.mock_list_apps(pool="green")
-        self.assertEqual(self.tsuru_client.list_apps(), [{u'app1': [u'app1/0']}])
+        self.assertEqual(self.tsuru_client.list_apps(), [{"app1": {"cname": ["cname1"], "ip": "ip1"}}])
 
     @httpretty.activate
     def test_list_apps_no_web_apps(self):
